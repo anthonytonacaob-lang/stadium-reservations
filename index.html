@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SKILLS Admin Console</title>
-    <!-- Tailwind CSS, Chart.js, and Plus Jakarta Font -->
+    <!-- Tailwind CSS and Chart.js CDNs -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="config.js"></script>
@@ -33,7 +33,7 @@
             background: #00C2C3;
         }
 
-        /* Print formatting */
+        /* Printer Overrides */
         @media print {
             body { background: white !important; color: black !important; }
             body * { visibility: hidden; }
@@ -101,13 +101,13 @@
             </div>
             
             <nav class="space-y-1.5 text-sm">
-                <button id="btn-dashboard" onclick="switchView('dashboard')" class="w-full text-left py-3 px-4 rounded-lg transition duration-150 flex items-center gap-3 font-semibold bg-[#00C2C3]/10 text-[#00C2C3] border-l-4 border-[#00C2C3]">
+                <button id="btn-dashboard" onclick="switchView('dashboard')" class="w-full text-left py-3 px-4 rounded-lg transition duration-150 flex items-center gap-3 font-semibold text-slate-500 hover:text-[#00C2C3] hover:bg-slate-50">
                     <span>📊</span> Dashboard
                 </button>
                 <button id="btn-security" onclick="switchView('security')" class="w-full text-left py-3 px-4 rounded-lg transition duration-150 flex items-center gap-3 font-semibold text-slate-500 hover:text-[#00C2C3] hover:bg-slate-50">
                     <span>🛡️</span> Gate Schedule
                 </button>
-                <button id="btn-godmode" onclick="switchView('godmode')" class="w-full text-left py-3 px-4 rounded-lg transition duration-150 flex items-center gap-3 font-semibold text-slate-500 hover:text-[#00C2C3] hover:bg-slate-50">
+                <button id="btn-godmode" onclick="switchView('godmode')" class="w-full text-left py-3 px-4 rounded-lg transition duration-150 flex items-center gap-3 font-semibold bg-[#00C2C3]/10 text-[#00C2C3] border-l-4 border-[#00C2C3]">
                     <span>⚡</span> Data Entry
                 </button>
                 <button id="btn-queue" onclick="switchView('queue')" class="w-full text-left py-3 px-4 rounded-lg transition duration-150 flex items-center gap-3 font-semibold text-slate-500 hover:text-[#00C2C3] hover:bg-slate-50">
@@ -132,7 +132,7 @@
         <!-- Header Banner Card -->
         <header class="bg-gradient-to-r from-[#1E2034] to-[#451C2C] text-white p-6 md:p-8 rounded-3xl flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 shadow-lg shadow-slate-200">
             <div>
-                <h1 id="page-title" class="text-2xl md:text-3xl font-extrabold tracking-tight">SKILLS Admin Dashboard</h1>
+                <h1 id="page-title" class="text-2xl md:text-3xl font-extrabold tracking-tight">Manual Override System (Data Entry)</h1>
                 <p class="text-xs text-slate-300 mt-1">Live tracking database and operational controls</p>
             </div>
             <div class="flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/10 px-4 py-2 rounded-xl text-xs font-mono">
@@ -141,9 +141,8 @@
             </div>
         </header>
 
-        <!-- Dashboard View (Packages & Calendar) -->
+        <!-- Dashboard View -->
         <section id="view-dashboard" class="space-y-8">
-            <!-- 4 Package Configuration Cards -->
             <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
                 <!-- Card 1: Regular Games -->
                 <div class="bg-white p-6 rounded-2xl shadow-sm border-t-4 border-blue-500 flex flex-col justify-between shadow-slate-100">
@@ -320,11 +319,11 @@
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
                             <label class="block text-[10px] font-extrabold text-slate-500 uppercase tracking-wider">Total Hours (All Slots)</label>
-                            <input type="text" id="summary-hours" readonly value="0" class="w-full mt-1.5 bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-sm text-slate-500 cursor-not-allowed font-semibold">
+                            <input type="text" id="summary-hours" readonly value="0" class="w-full mt-1.5 bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-sm text-[#00C2C3] cursor-not-allowed font-semibold">
                         </div>
                         <div>
                             <label class="block text-[10px] font-extrabold text-slate-500 uppercase tracking-wider">Total Base Amount (All Slots)</label>
-                            <input type="text" id="summary-base-amount" readonly value="0.00" class="w-full mt-1.5 bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-sm text-slate-500 cursor-not-allowed font-semibold">
+                            <input type="text" id="summary-base-amount" readonly value="0.00" class="w-full mt-1.5 bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-sm text-[#00C2C3] cursor-not-allowed font-semibold">
                         </div>
                     </div>
 
@@ -550,7 +549,7 @@
             }
         }
 
-        // Dynamic Slot Generator matching image
+        // Dynamic Slot Generator matching image (Using 1-Hour Dropdowns)
         function addBookingSlotItem() {
             slotCounter++;
             const container = document.getElementById('booking-slots-container');
@@ -629,6 +628,7 @@
             calculateGodSummary();
         }
 
+        // Fills Dropdown options with 1-hour intervals as requested
         function populateSlotTimeSelects(slotId) {
             const slot = document.getElementById(slotId);
             const startSelect = slot.querySelector('.slot-start');
@@ -639,14 +639,8 @@
 
             for (let hour = 6; hour <= 22; hour++) {
                 let hourStr = hour < 10 ? '0' + hour : hour;
-                
                 startSelect.innerHTML += `<option value="${hourStr}:00">${formatTimeLabel(hour)}</option>`;
                 endSelect.innerHTML += `<option value="${hourStr}:00">${formatTimeLabel(hour)}</option>`;
-                
-                if (hour !== 22) {
-                    startSelect.innerHTML += `<option value="${hourStr}:30">${hourStr.toString()}:30 ${hour >= 12 ? 'PM':'AM'}</option>`;
-                    endSelect.innerHTML += `<option value="${hourStr}:30">${hourStr.toString()}:30 ${hour >= 12 ? 'PM':'AM'}</option>`;
-                }
             }
         }
 
@@ -693,6 +687,14 @@
             calculateGodSummary();
         }
 
+        // Safe parser prevents NaN conversion from breaking Grand Total computations
+        function parseTime(t) {
+            if (!t || typeof t !== 'string' || !t.includes(':')) return null;
+            const [h, m] = t.split(':').map(Number);
+            if (isNaN(h) || isNaN(m)) return null;
+            return h + (m/60);
+        }
+
         // Live computations of all booking summary values using hourly Day/Night pricing splits
         function calculateGodSummary() {
             const slots = document.querySelectorAll('.booking-slot-item');
@@ -704,10 +706,10 @@
                 const startVal = slot.querySelector('.slot-start').value;
                 const endVal = slot.querySelector('.slot-end').value;
 
-                if (startVal && endVal) {
-                    const start = parseTime(startVal);
-                    const end = parseTime(endVal);
+                const start = parseTime(startVal);
+                const end = parseTime(endVal);
 
+                if (start !== null && end !== null) {
                     if (start < end) {
                         const delta = end - start;
                         totalHours += delta;
@@ -715,12 +717,12 @@
                         const rateConfig = RATES[sport] || { day: 450.00, night: 550.00 };
                         let slotPrice = 0;
 
-                        // Process this slot's span in 30-minute blocks
-                        for (let h = start; h < end; h += 0.5) {
+                        // Process this slot's span in 1-hour increments
+                        for (let h = start; h < end; h += 1) {
                             if (h >= 6 && h < 17) {
-                                slotPrice += 0.5 * rateConfig.day; // Day Rate Block
+                                slotPrice += rateConfig.day; // Day Rate Block
                             } else if (h >= 17 && h < 22) {
-                                slotPrice += 0.5 * rateConfig.night; // Night Rate Block
+                                slotPrice += rateConfig.night; // Night Rate Block
                             }
                         }
                         baseAmount += slotPrice;
@@ -760,11 +762,14 @@
                 const start = slot.querySelector('.slot-start').value;
                 const end = slot.querySelector('.slot-end').value;
 
-                if (!start || !end) {
+                const startTimeVal = parseTime(start);
+                const endTimeVal = parseTime(end);
+
+                if (startTimeVal === null || endTimeVal === null) {
                     alert("Please select valid Start and End times for all active slots.");
                     return;
                 }
-                if (parseTime(start) >= parseTime(end)) {
+                if (startTimeVal >= endTimeVal) {
                     alert("Time started must configure to begin before time ended.");
                     return;
                 }
@@ -874,8 +879,10 @@
                     if (b.court === court || b.court === 'Whole Gym') {
                         let start = parseTime(b.start);
                         let end = parseTime(b.end);
-                        if (start < eh && end > sh) {
-                            return b.status;
+                        if (start !== null && end !== null) {
+                            if (start < eh && end > sh) {
+                                return b.status;
+                            }
                         }
                     }
                 }
@@ -887,7 +894,7 @@
             if (status === 'CONFIRMED') {
                 return `<span class="bg-red-50 text-red-500 border border-red-100 rounded-xl text-center text-xs font-extrabold tracking-wider py-2 uppercase block w-full select-none shadow-sm shadow-red-500/5">TAKEN</span>`;
             } else if (status === 'PENDING') {
-                return `<span class="bg-orange-50 text-orange-500 border border-orange-100 rounded-xl text-center text-xs font-extrabold tracking-wider py-2 uppercase block w-full select-none shadow-sm shadow-orange-500/5">RESERVED</span>`;
+                return `<span class="bg-orange-50 text-orange-400 rounded-lg text-center text-[10px] py-1.5 font-extrabold tracking-wider uppercase">RESERVED</span>`;
             }
             return `<span class="bg-indigo-50 text-indigo-600 border border-indigo-100 rounded-xl text-center text-xs font-extrabold tracking-wider py-2 uppercase block w-full select-none shadow-sm shadow-indigo-500/5">AVAILABLE</span>`;
         }
