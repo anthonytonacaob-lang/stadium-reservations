@@ -224,6 +224,10 @@
         function generateTimeOptions() {
             const startSelect = document.getElementById('form-start');
             const endSelect = document.getElementById('form-end');
+            
+            startSelect.innerHTML = `<option value="">Select start time...</option>`;
+            endSelect.innerHTML = `<option value="">Select end time...</option>`;
+
             for (let hour = 6; hour <= 22; hour++) {
                 let hourStr = hour < 10 ? '0' + hour : hour;
                 if (hour !== 22) {
@@ -231,10 +235,6 @@
                 }
                 if (hour !== 6) {
                     endSelect.innerHTML += `<option value="${hourStr}:00">${formatTimeLabel(hour)}</option>`;
-                }
-                if (hour !== 22) {
-                    startSelect.innerHTML += `<option value="${hourStr}:30">${hourStr.toString()}:30 ${hour >= 12 ? 'PM':'AM'}</option>`;
-                    endSelect.innerHTML += `<option value="${hourStr}:30">${hourStr.toString()}:30 ${hour >= 12 ? 'PM':'AM'}</option>`;
                 }
             }
         }
@@ -317,8 +317,10 @@
                     if (b.court === court || b.court === 'Whole Gym') {
                         let start = parseTime(b.start);
                         let end = parseTime(b.end);
-                        if (fractionalTime >= start && fractionalTime < end) {
-                            return b.status;
+                        if (start !== null && end !== null) {
+                            if (fractionalTime >= start && fractionalTime < end) {
+                                return b.status;
+                            }
                         }
                     }
                 }
@@ -327,7 +329,9 @@
         }
 
         function parseTime(t) {
+            if (!t || typeof t !== 'string' || !t.includes(':')) return null;
             const [h, m] = t.split(':').map(Number);
+            if (isNaN(h) || isNaN(m)) return null;
             return h + (m/60);
         }
 
@@ -348,7 +352,7 @@
             const start = parseTime(startVal);
             const end = parseTime(endVal);
 
-            if (start >= end) {
+            if (start === null || end === null || start >= end) {
                 document.getElementById('price-display').innerText = 'PHP 0.00';
                 return;
             }
@@ -356,12 +360,12 @@
             const rateConfig = RATES[sport] || { day: 450.00, night: 550.00 };
             let price = 0;
 
-            // Process selected customer timeslot span in 30-minute blocks
-            for (let h = start; h < end; h += 0.5) {
+            // Process selected customer timeslot span in 1-hour increments
+            for (let h = start; h < end; h += 1) {
                 if (h >= 6 && h < 17) {
-                    price += 0.5 * rateConfig.day; // Day Rate Block
+                    price += rateConfig.day; // Day Rate Block
                 } else if (h >= 17 && h < 22) {
-                    price += 0.5 * rateConfig.night; // Night Rate Block
+                    price += rateConfig.night; // Night Rate Block
                 }
             }
             
@@ -376,7 +380,14 @@
             const end = document.getElementById('form-end').value;
             const court = document.getElementById('form-court').value;
 
-            if (parseTime(start) >= parseTime(end)) {
+            const startTimeVal = parseTime(start);
+            const endTimeVal = parseTime(end);
+
+            if (startTimeVal === null || endTimeVal === null) {
+                showAlert("Form Validation Error", "Please select valid start and end times.");
+                return;
+            }
+            if (startTimeVal >= endTimeVal) {
                 showAlert("Form Validation Error", "The start time must configure to begin before your end time.");
                 return;
             }
