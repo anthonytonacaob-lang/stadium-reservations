@@ -7,127 +7,207 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="config.js"></script>
     <style>
+        /* Modern Scrollbar Styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0b0f19;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1e293b;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #ea580c;
+        }
+
+        /* Specific Printer Styling (forces light background for paper output) */
         @media print {
+            body { background: white !important; color: black !important; }
             body * { visibility: hidden; }
             #printable-section, #printable-section * { visibility: visible; }
-            #printable-section { position: absolute; left: 0; top: 0; width: 100%; }
+            #printable-section { 
+                position: absolute; 
+                left: 0; 
+                top: 0; 
+                width: 100%; 
+                color: #000000 !important; 
+                background: #ffffff !important; 
+            }
         }
     </style>
 </head>
-<body class="bg-gray-100 flex min-h-screen text-gray-800">
+<body class="bg-[#0B0F19] text-slate-100 flex min-h-screen font-sans">
 
-    <aside class="w-64 bg-indigo-950 text-indigo-100 p-6 flex-shrink-0 flex flex-col justify-between hidden md:flex">
-        <div class="space-y-6">
-            <h2 class="text-xl font-bold border-b border-indigo-800 pb-4">Stadium Admin</h2>
-            <nav class="space-y-2 text-sm font-semibold">
-                <button onclick="switchView('dashboard')" class="w-full text-left py-2 px-3 hover:bg-indigo-900 rounded-lg">📊 Telemetry Dashboard</button>
-                <button onclick="switchView('queue')" class="w-full text-left py-2 px-3 hover:bg-indigo-900 rounded-lg">📋 Request Queue</button>
-                <button onclick="switchView('godmode')" class="w-full text-left py-2 px-3 hover:bg-indigo-900 rounded-lg">⚡ Walk-In Entry (God Mode)</button>
-                <button onclick="switchView('security')" class="w-full text-left py-2 px-3 hover:bg-indigo-900 rounded-lg">🛡️ Gate Pass Schedule</button>
+    <!-- Sidebar Navigation -->
+    <aside class="w-64 bg-[#080B13] border-r border-slate-800 p-6 flex-shrink-0 flex flex-col justify-between hidden md:flex">
+        <div class="space-y-8">
+            <div class="flex items-center gap-3 border-b border-slate-800 pb-5">
+                <div class="w-8 h-8 rounded-lg bg-orange-500 flex items-center justify-center font-black text-slate-950">S</div>
+                <div>
+                    <h2 class="text-base font-bold text-slate-100 leading-tight">Stadium Admin</h2>
+                    <span class="text-[10px] text-orange-500 font-bold uppercase tracking-widest">Control Room</span>
+                </div>
+            </div>
+            
+            <nav class="space-y-1 text-sm">
+                <button id="btn-dashboard" onclick="switchView('dashboard')" class="w-full text-left py-3 px-4 rounded-lg transition duration-150 flex items-center gap-3 font-semibold bg-orange-500/10 text-orange-500 border-l-4 border-orange-500">
+                    <span>📊</span> Telemetry Dashboard
+                </button>
+                <button id="btn-queue" onclick="switchView('queue')" class="w-full text-left py-3 px-4 rounded-lg transition duration-150 flex items-center gap-3 font-semibold text-slate-400 hover:text-orange-500 hover:bg-slate-900">
+                    <span>📋</span> Request Queue
+                </button>
+                <button id="btn-godmode" onclick="switchView('godmode')" class="w-full text-left py-3 px-4 rounded-lg transition duration-150 flex items-center gap-3 font-semibold text-slate-400 hover:text-orange-500 hover:bg-slate-900">
+                    <span>⚡</span> Walk-In Override
+                </button>
+                <button id="btn-security" onclick="switchView('security')" class="w-full text-left py-3 px-4 rounded-lg transition duration-150 flex items-center gap-3 font-semibold text-slate-400 hover:text-orange-500 hover:bg-slate-900">
+                    <span>🛡️</span> Gate Schedule
+                </button>
             </nav>
         </div>
-        <div class="text-xs text-indigo-400">Enterprise Edition v2.1</div>
+        <div class="text-[10px] text-slate-600 font-mono">
+            System Version v2.2<br>Theme: Orange-Blue
+        </div>
     </aside>
 
+    <!-- Main Workspace -->
     <main class="flex-1 p-8 space-y-8 overflow-y-auto">
+        
+        <!-- Header -->
+        <header class="flex justify-between items-center border-b border-slate-800 pb-5">
+            <div>
+                <h1 id="page-title" class="text-3xl font-black text-slate-100 tracking-tight">System Metrics & Utilization</h1>
+                <p class="text-xs text-slate-500 mt-1">Live tracking database and operational gateway controls</p>
+            </div>
+            <div class="flex items-center gap-2 bg-[#080B13] border border-slate-800 px-4 py-2 rounded-lg text-xs font-mono">
+                <span class="w-2 h-2 rounded-full bg-orange-500 animate-pulse"></span>
+                <span class="text-slate-400">Database Linked</span>
+            </div>
+        </header>
+
+        <!-- Dashboard View -->
         <section id="view-dashboard" class="space-y-6">
-            <h1 class="text-3xl font-extrabold text-indigo-950">System Metrics & Utilization</h1>
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <div class="bg-white p-6 rounded-xl shadow-md border">
-                    <h3 class="font-bold text-gray-700 mb-4">Total Revenue Over Days ($)</h3>
-                    <canvas id="revenueChart" height="150"></canvas>
+                <!-- Line Chart Card -->
+                <div class="bg-[#0f172a]/40 backdrop-blur-md p-6 rounded-2xl border border-slate-800 shadow-xl shadow-black/5">
+                    <h3 class="font-bold text-slate-300 text-sm tracking-wider uppercase mb-4">Total Revenue Over Days ($)</h3>
+                    <div class="h-64 flex items-center justify-center">
+                        <canvas id="revenueChart"></canvas>
+                    </div>
                 </div>
-                <div class="bg-white p-6 rounded-xl shadow-md border">
-                    <h3 class="font-bold text-gray-700 mb-4">Busiest Days (Count)</h3>
-                    <canvas id="busiestChart" height="150"></canvas>
+                <!-- Bar Chart Card -->
+                <div class="bg-[#0f172a]/40 backdrop-blur-md p-6 rounded-2xl border border-slate-800 shadow-xl shadow-black/5">
+                    <h3 class="font-bold text-slate-300 text-sm tracking-wider uppercase mb-4">Busiest Days (Count)</h3>
+                    <div class="h-64 flex items-center justify-center">
+                        <canvas id="busiestChart"></canvas>
+                    </div>
                 </div>
             </div>
         </section>
 
+        <!-- Request Queue View -->
         <section id="view-queue" class="space-y-6 hidden">
-            <h1 class="text-3xl font-extrabold text-indigo-950">Verification Pipeline Queue</h1>
-            <div class="bg-white rounded-xl shadow border overflow-hidden">
-                <table class="w-full text-left border-collapse">
-                    <thead class="bg-gray-50 text-gray-600 text-xs uppercase">
-                        <tr>
-                            <th class="p-4">ID</th>
-                            <th class="p-4">Name</th>
-                            <th class="p-4">Target Details</th>
-                            <th class="p-4">Financial Quote</th>
-                            <th class="p-4 text-right">Administrative Execution</th>
-                        </tr>
-                    </thead>
-                    <tbody id="queue-body" class="divide-y divide-gray-100 text-sm"></tbody>
-                </table>
+            <div class="bg-[#0f172a]/40 backdrop-blur-md rounded-2xl border border-slate-800 shadow-xl overflow-hidden">
+                <div class="px-6 py-4 border-b border-slate-800">
+                    <h3 class="font-bold text-slate-300 uppercase tracking-wider text-sm">Active Inbound Validation Pipeline</h3>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead class="bg-[#080B13] text-slate-400 text-xs uppercase tracking-wider border-b border-slate-800">
+                            <tr>
+                                <th class="p-4">ID</th>
+                                <th class="p-4">Client Name</th>
+                                <th class="p-4">Target Details</th>
+                                <th class="p-4">Financial Quote</th>
+                                <th class="p-4 text-right">Administrative Execution</th>
+                            </tr>
+                        </thead>
+                        <tbody id="queue-body" class="divide-y divide-slate-800/80 text-sm">
+                            <!-- Filled dynamically via JS -->
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </section>
 
+        <!-- Walk-In override (God Mode) View -->
         <section id="view-godmode" class="space-y-6 hidden">
-            <div class="max-w-xl mx-auto bg-white p-8 rounded-2xl shadow-lg border">
-                <h2 class="text-2xl font-black text-indigo-950 mb-4">Manual Entry Override (God Mode)</h2>
-                <form id="god-form" class="space-y-4">
-                    <div class="grid grid-cols-2 gap-4">
+            <div class="max-w-2xl mx-auto bg-[#0f172a]/40 backdrop-blur-md p-8 rounded-2xl border border-slate-800 shadow-2xl">
+                <h2 class="text-2xl font-black text-slate-100 tracking-tight">Manual Entry Override (God Mode)</h2>
+                <p class="text-xs text-slate-500 mt-1 mb-6">Forces immediate reservation authorization. Disables standard 3-hour minimum delay rules.</p>
+                
+                <form id="god-form" class="space-y-5">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-xs font-semibold">Client Name</label>
-                            <input type="text" id="g-name" required class="w-full mt-1 border border-gray-300 rounded p-2 text-sm">
+                            <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider">Client Name</label>
+                            <input type="text" id="g-name" required class="w-full mt-1.5 bg-[#080B13] border border-slate-800 rounded-lg p-2.5 text-sm text-slate-100 focus:outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500">
                         </div>
                         <div>
-                            <label class="block text-xs font-semibold">Email</label>
-                            <input type="email" id="g-email" required class="w-full mt-1 border border-gray-300 rounded p-2 text-sm">
-                        </div>
-                    </div>
-                    <div class="grid grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-xs font-semibold">Sport</label>
-                            <input type="text" id="g-sport" value="Basketball" class="w-full mt-1 border border-gray-300 rounded p-2 text-sm">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-semibold">Court</label>
-                            <input type="text" id="g-court" value="Court 1" class="w-full mt-1 border border-gray-300 rounded p-2 text-sm">
+                            <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider">Email Address</label>
+                            <input type="email" id="g-email" required class="w-full mt-1.5 bg-[#080B13] border border-slate-800 rounded-lg p-2.5 text-sm text-slate-100 focus:outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500">
                         </div>
                     </div>
-                    <div class="grid grid-cols-3 gap-2">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-xs font-semibold">Date</label>
-                            <input type="date" id="g-date" required class="w-full mt-1 border border-gray-300 rounded p-2 text-sm">
+                            <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider">Sport</label>
+                            <input type="text" id="g-sport" value="Basketball" class="w-full mt-1.5 bg-[#080B13] border border-slate-800 rounded-lg p-2.5 text-sm text-slate-100 focus:outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500">
                         </div>
                         <div>
-                            <label class="block text-xs font-semibold">Start Time</label>
-                            <input type="text" id="g-start" placeholder="08:00" class="w-full mt-1 border border-gray-300 rounded p-2 text-sm">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-semibold">End Time</label>
-                            <input type="text" id="g-end" placeholder="10:00" class="w-full mt-1 border border-gray-300 rounded p-2 text-sm">
+                            <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider">Court Selection</label>
+                            <input type="text" id="g-court" value="Court 1" class="w-full mt-1.5 bg-[#080B13] border border-slate-800 rounded-lg p-2.5 text-sm text-slate-100 focus:outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500">
                         </div>
                     </div>
-                    <div class="grid grid-cols-2 gap-4">
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
                         <div>
-                            <label class="block text-xs font-semibold">Payment Method</label>
-                            <select id="g-pay" class="w-full mt-1 border border-gray-300 rounded p-2 text-sm">
+                            <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider">Date</label>
+                            <input type="date" id="g-date" required class="w-full mt-1.5 bg-[#080B13] border border-slate-800 rounded-lg p-2.5 text-sm text-slate-100 focus:outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider">Start Time</label>
+                            <input type="text" id="g-start" placeholder="08:00" class="w-full mt-1.5 bg-[#080B13] border border-slate-800 rounded-lg p-2.5 text-sm text-slate-100 focus:outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider">End Time</label>
+                            <input type="text" id="g-end" placeholder="10:00" class="w-full mt-1.5 bg-[#080B13] border border-slate-800 rounded-lg p-2.5 text-sm text-slate-100 focus:outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500">
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider">Payment Method</label>
+                            <select id="g-pay" class="w-full mt-1.5 bg-[#080B13] border border-slate-800 rounded-lg p-2.5 text-sm text-slate-100 focus:outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500">
                                 <option value="Cash">Cash Handover</option>
                                 <option value="Online">Online Bank Transfer</option>
                             </select>
                         </div>
                         <div>
-                            <label class="block text-xs font-semibold">Reference Number</label>
-                            <input type="text" id="g-ref" placeholder="Txn ID" class="w-full mt-1 border border-gray-300 rounded p-2 text-sm">
+                            <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider">Reference Number</label>
+                            <input type="text" id="g-ref" placeholder="Txn ID" class="w-full mt-1.5 bg-[#080B13] border border-slate-800 rounded-lg p-2.5 text-sm text-slate-100 focus:outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500">
                         </div>
                     </div>
-                    <button type="submit" class="w-full bg-indigo-950 text-white p-3 rounded font-semibold text-sm hover:bg-black">Authorize Instant Slot</button>
+                    <button type="submit" class="w-full bg-orange-500 hover:bg-orange-600 text-slate-950 p-3 rounded-lg font-bold text-sm tracking-wide shadow-lg shadow-orange-500/20 transition duration-150 mt-2">
+                        Authorize Instant Slot Space
+                    </button>
                 </form>
             </div>
         </section>
 
+        <!-- Gate Pass Schedule View -->
         <section id="view-security" class="space-y-6 hidden">
-            <div class="bg-white p-6 rounded-xl border flex justify-between items-center shadow-md">
+            <div class="bg-[#0f172a]/40 backdrop-blur-md p-6 rounded-2xl border border-slate-800 flex justify-between items-center shadow-lg">
                 <div>
                     <h2 class="text-xl font-bold">Gate Guard Security Sheet</h2>
+                    <p class="text-xs text-slate-500 mt-1">Verified confirmation lists generated for secure facility access validation.</p>
                 </div>
-                <button onclick="printGateSchedule()" class="bg-indigo-950 hover:bg-black text-white px-4 py-2 rounded text-xs font-semibold">Generate Print List</button>
+                <button onclick="printGateSchedule()" class="bg-orange-500 hover:bg-orange-600 text-slate-950 px-5 py-2.5 rounded-lg text-xs font-bold shadow-md shadow-orange-500/15 transition duration-150">
+                    Generate Print List
+                </button>
             </div>
-            <div class="bg-white rounded-xl border shadow">
+            
+            <div class="bg-[#0f172a]/40 backdrop-blur-md rounded-2xl border border-slate-800 shadow-xl overflow-hidden">
                 <table class="w-full text-left">
-                    <thead class="bg-gray-50 text-xs">
+                    <thead class="bg-[#080B13] text-slate-400 text-xs uppercase tracking-wider border-b border-slate-800">
                         <tr>
                             <th class="p-4">Secure Pass #</th>
                             <th class="p-4">Location</th>
@@ -135,12 +215,15 @@
                             <th class="p-4">Verified Ingress Guest Name</th>
                         </tr>
                     </thead>
-                    <tbody id="security-table-body" class="text-sm divide-y"></tbody>
+                    <tbody id="security-table-body" class="text-sm divide-y divide-slate-800/80">
+                        <!-- Filled dynamically via JS -->
+                    </tbody>
                 </table>
             </div>
         </section>
     </main>
 
+    <!-- Invisible Printing Wrapper Frame Container (Always hidden until print action triggers) -->
     <div id="printable-section" class="hidden"></div>
 
     <script>
@@ -153,11 +236,30 @@
             refreshAdminData();
         });
 
+        // Clean Sidebar Navigation Switcher
         function switchView(viewName) {
-            ['dashboard', 'queue', 'godmode', 'security'].forEach(v => {
+            const views = ['dashboard', 'queue', 'godmode', 'security'];
+            const titles = {
+                dashboard: 'System Metrics & Utilization',
+                queue: 'Verification Pipeline Queue',
+                godmode: 'Manual Override System',
+                security: 'Security Clearance'
+            };
+
+            views.forEach(v => {
                 document.getElementById(`view-${v}`).classList.add('hidden');
+                
+                // Clear active states on sidebar tabs
+                const btn = document.getElementById(`btn-${v}`);
+                btn.className = "w-full text-left py-3 px-4 rounded-lg transition duration-150 flex items-center gap-3 font-semibold text-slate-400 hover:text-orange-500 hover:bg-slate-900";
             });
+
+            // Show active views and target tabs
             document.getElementById(`view-${viewName}`).classList.remove('hidden');
+            document.getElementById(`page-title`).innerText = titles[viewName];
+            
+            const activeBtn = document.getElementById(`btn-${viewName}`);
+            activeBtn.className = "w-full text-left py-3 px-4 rounded-lg transition duration-150 flex items-center gap-3 font-semibold bg-orange-500/10 text-orange-500 border-l-4 border-orange-500";
         }
 
         async function refreshAdminData() {
@@ -168,7 +270,7 @@
                 populateSecurityTable();
                 buildCharts();
             } catch (err) {
-                console.error(err);
+                console.error("API Retrieve error:", err);
             }
         }
 
@@ -176,29 +278,31 @@
             const body = document.getElementById('queue-body');
             body.innerHTML = '';
             const pendingList = bookingsData.filter(b => b.status === 'PENDING');
+            
             if (pendingList.length === 0) {
-                body.innerHTML = `<tr><td colspan="5" class="p-6 text-center text-gray-400">Pipeline clean. No actions needed.</td></tr>`;
+                body.innerHTML = `<tr><td colspan="5" class="p-6 text-center text-slate-500">No operations pending execution inside the queue.</td></tr>`;
                 return;
             }
+
             pendingList.forEach(b => {
                 body.innerHTML += `
-                    <tr>
-                        <td class="p-4 font-mono font-bold">#${b.id}</td>
+                    <tr class="hover:bg-slate-900/35 transition duration-100">
+                        <td class="p-4 font-mono font-bold text-orange-500">#${b.id}</td>
                         <td class="p-4">
-                            <div class="font-bold text-gray-900">${b.name}</div>
-                            <div class="text-xs text-gray-400">${b.email}</div>
+                            <div class="font-bold text-slate-100">${b.name}</div>
+                            <div class="text-xs text-slate-500 mt-0.5">${b.email}</div>
                         </td>
                         <td class="p-4">
-                            <span class="text-xs font-semibold px-2 py-0.5 bg-indigo-50 text-indigo-800 rounded-full">${b.sport}</span>
-                            <div class="text-xs text-gray-600 mt-1">${b.court} | ${b.date}</div>
-                            <div class="text-xs font-mono font-bold text-indigo-900">${b.start} - ${b.end}</div>
+                            <span class="text-[10px] font-bold px-2.5 py-1 bg-orange-500/10 text-orange-500 border border-orange-500/20 rounded-full uppercase tracking-wider">${b.sport}</span>
+                            <div class="text-xs text-slate-400 mt-2">${b.court} | ${b.date}</div>
+                            <div class="text-xs font-mono font-bold text-slate-300 mt-1">${b.start} - ${b.end}</div>
                         </td>
-                        <td class="p-4 font-black text-gray-900">$${Number(b.cost).toFixed(2)}</td>
-                        <td class="p-4 text-right space-y-2">
-                            <div class="flex justify-end gap-2">
-                                <input type="number" id="charge-${b.id}" placeholder="Charges" class="w-20 border border-gray-300 rounded p-1 text-xs">
-                                <button onclick="actionRequest('${b.id}', 'APPROVE')" class="bg-emerald-600 text-white font-bold px-3 py-1 rounded text-xs hover:bg-emerald-700">Approve</button>
-                                <button onclick="triggerRejectPrompt('${b.id}')" class="bg-red-600 text-white font-bold px-3 py-1 rounded text-xs hover:bg-red-700">Reject</button>
+                        <td class="p-4 font-black text-slate-100">$${Number(b.cost).toFixed(2)}</td>
+                        <td class="p-4 text-right">
+                            <div class="flex items-center justify-end gap-2">
+                                <input type="number" id="charge-${b.id}" placeholder="+$0.00" class="w-20 bg-[#080B13] border border-slate-800 rounded p-1.5 text-xs text-slate-100 focus:outline-none focus:border-orange-500 text-center">
+                                <button onclick="actionRequest('${b.id}', 'APPROVE')" class="bg-orange-500 text-slate-950 font-bold px-3 py-1.5 rounded text-xs hover:bg-orange-600 transition">Approve</button>
+                                <button onclick="triggerRejectPrompt('${b.id}')" class="border border-red-500/30 text-red-500 hover:bg-red-500/10 font-bold px-3 py-1.5 rounded text-xs transition">Reject</button>
                             </div>
                         </td>
                     </tr>
@@ -229,7 +333,7 @@
                 });
 
                 if (res.success) {
-                    alert(`Request status updated successfully.`);
+                    alert(`Action completed.`);
                     if (action === 'APPROVE') {
                         generateReceiptTemplate(bookingId);
                     }
@@ -251,17 +355,37 @@
             if (!b) return;
 
             const printArea = document.getElementById('printable-section');
-            printArea.innerHTML = `
-                <div style="font-family: Arial, sans-serif; padding: 30px; border: 2px dashed #333; margin-bottom: 40px; border-radius: 8px;">
-                    <h1 style="font-size: 26px; font-weight: 900; margin: 0; text-align: center;">SPORTPLEX RECEIPT</h1>
-                    <p style="text-align: center; font-size: 11px;">ADMINISTRATIVE COPY</p>
-                    <p><strong>Billed To:</strong> ${b.name}</p>
-                    <p><strong>Session Court:</strong> ${b.court} (${b.sport})</p>
-                    <p><strong>Receipt Number:</strong> #${b.id}</p>
-                    <p><strong>Date/Time:</strong> ${b.date} | ${b.start} - ${b.end}</p>
-                    <div style="background: #eee; font-size: 18px; font-weight: 900; padding: 10px;">Total Paid: $${Number(b.cost).toFixed(2)}</div>
+            const waiverHtml = `
+                <div style="font-family: Arial, sans-serif; padding: 40px; color: black !important; background: white !important;">
+                    <div style="text-align: center; border-bottom: 2px solid #000; padding-bottom: 15px; margin-bottom: 30px;">
+                        <h1 style="font-size: 28px; font-weight: 900; margin: 0; text-transform: uppercase;">SportPlex Arena</h1>
+                        <p style="font-size: 11px; margin: 5px 0 0 0; tracking-spacing: 2px;">SECURE INGRESS RECEIPT & RETAINER SHEET</p>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 30px; font-size: 13px;">
+                        <div>
+                            <p><strong>Primary Client:</strong> ${b.name}</p>
+                            <p><strong>Session Location:</strong> ${b.court} (${b.sport})</p>
+                        </div>
+                        <div style="text-align: right;">
+                            <p><strong>Secure Booking ID:</strong> #${b.id}</p>
+                            <p><strong>Assigned Timestamp:</strong> ${b.date} | ${b.start} - ${b.end}</p>
+                        </div>
+                    </div>
+                    <div style="background: #f4f4f5; padding: 20px; font-size: 18px; font-weight: bold; border-radius: 6px; display: flex; justify-content: space-between; margin-bottom: 40px;">
+                        <span>Final Invoiced Total Amount:</span>
+                        <span>$${Number(b.cost).toFixed(2)}</span>
+                    </div>
+                    <div style="border-top: 1px solid #ccc; padding-top: 20px; font-size: 10px; line-height: 1.5;">
+                        <h3 style="font-size: 12px; margin-top: 0; text-transform: uppercase;">Legal Liability Disclaimer of Liability</h3>
+                        <p>By signature below, the participant agrees to waive facility operations claims of physical injuries, damages, or equipment errors inside complex grounds. All basic terms within regular coverage systems remain in effect.</p>
+                        <div style="display: flex; justify-content: space-between; margin-top: 50px;">
+                            <span style="border-top: 1px solid #000; width: 40%; text-align: center; padding-top: 8px;">Participant Signature: <strong>${b.name}</strong></span>
+                            <span style="border-top: 1px solid #000; width: 40%; text-align: center; padding-top: 8px;">Supervisor Authorization</span>
+                        </div>
+                    </div>
                 </div>
             `;
+            printArea.innerHTML = waiverHtml;
             printArea.classList.remove('hidden');
             window.print();
             printArea.classList.add('hidden');
@@ -273,16 +397,16 @@
             const confirmed = bookingsData.filter(b => b.status === 'CONFIRMED');
 
             if (confirmed.length === 0) {
-                body.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-gray-400">No active confirmed bookings logged for today.</td></tr>`;
+                body.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-slate-500">No confirmed lists logged for modern gate pass verification.</td></tr>`;
                 return;
             }
             confirmed.forEach(b => {
                 body.innerHTML += `
-                    <tr>
-                        <td class="p-4 font-mono font-bold">#${b.id}</td>
-                        <td class="p-4">${b.court}</td>
-                        <td class="p-4 font-mono">${b.start} - ${b.end}</td>
-                        <td class="p-4 font-bold">${b.name}</td>
+                    <tr class="hover:bg-slate-900/35 transition duration-100">
+                        <td class="p-4 font-mono font-bold text-orange-500">#${b.id}</td>
+                        <td class="p-4 text-slate-200 font-semibold">${b.court}</td>
+                        <td class="p-4 font-mono text-slate-300">${b.start} - ${b.end}</td>
+                        <td class="p-4 font-bold text-slate-100">${b.name}</td>
                     </tr>
                 `;
             });
@@ -293,9 +417,31 @@
             const printArea = document.getElementById('printable-section');
             let rows = '';
             confirmed.forEach(b => {
-                rows += `<tr><td>#${b.id}</td><td>${b.court}</td><td>${b.start} - ${b.end}</td><td>${b.name}</td></tr>`;
+                rows += `
+                    <tr style="border-bottom: 1px solid #ddd; font-size: 12px;">
+                        <td style="padding: 10px; font-weight: bold; font-family: monospace;">#${b.id}</td>
+                        <td style="padding: 10px;">${b.court}</td>
+                        <td style="padding: 10px; font-family: monospace;">${b.start} - ${b.end}</td>
+                        <td style="padding: 10px; font-weight: bold;">${b.name}</td>
+                    </tr>
+                `;
             });
-            printArea.innerHTML = `<table>${rows}</table>`;
+            printArea.innerHTML = `
+                <div style="font-family: Arial, sans-serif; padding: 30px; color: black !important; background: white !important;">
+                    <h2 style="text-align: center; border-bottom: 2px solid #000; padding-bottom: 10px; text-transform: uppercase;">Ingress Verification Master Gate Log</h2>
+                    <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
+                        <thead>
+                            <tr style="background: #f4f4f5; text-align: left; font-size: 11px; border-bottom: 2px solid #ccc;">
+                                <th style="padding: 10px;">Security Pass ID</th>
+                                <th style="padding: 10px;">Location</th>
+                                <th style="padding: 10px;">Schedule Window</th>
+                                <th style="padding: 10px;">Authorized Ingress Guest Name</th>
+                            </tr>
+                        </thead>
+                        <tbody>${rows}</tbody>
+                    </table>
+                </div>
+            `;
             printArea.classList.remove('hidden');
             window.print();
             printArea.classList.add('hidden');
@@ -319,7 +465,7 @@
             try {
                 const res = await callAPI('submitBooking', formData);
                 if (res.success) {
-                    alert(`God Mode Entry Confirmed. ID #${res.bookingId}`);
+                    alert(`God Mode Space Reservation Authorized. Session Entry: #${res.bookingId}`);
                     document.getElementById('god-form').reset();
                     refreshAdminData();
                 } else {
@@ -330,6 +476,7 @@
             }
         }
 
+        // Palette matching Chart.js Styling Configuration
         function buildCharts() {
             const confirmed = bookingsData.filter(b => b.status === 'CONFIRMED');
             const daysMap = {};
@@ -344,23 +491,66 @@
             const bookingsCounts = Object.values(daysMap);
             const revenues = labels.map(label => revMap[label]);
 
+            // Chart configuration values for dark mode scale colors
+            const chartScalesConfig = {
+                x: {
+                    grid: { color: '#1e293b' },
+                    ticks: { color: '#94a3b8', font: { family: 'monospace' } }
+                },
+                y: {
+                    grid: { color: '#1e293b' },
+                    ticks: { color: '#94a3b8', font: { family: 'monospace' } }
+                }
+            };
+
+            const chartLegendConfig = {
+                labels: { color: '#cbd5e1', font: { weight: 'bold' } }
+            };
+
+            // Revenue Chart
             if (revenueChartInstance) revenueChartInstance.destroy();
             const ctxRev = document.getElementById('revenueChart').getContext('2d');
             revenueChartInstance = new Chart(ctxRev, {
                 type: 'line',
                 data: {
                     labels: labels,
-                    datasets: [{ label: 'Gross Daily Revenue ($)', data: revenues, borderColor: '#4338ca', fill: true }]
+                    datasets: [{
+                        label: 'Gross Revenue Inflow ($)',
+                        data: revenues,
+                        borderColor: '#ea580c', // Bright orange
+                        backgroundColor: 'rgba(234, 88, 12, 0.12)', // Orange glow
+                        fill: true,
+                        tension: 0.25,
+                        borderWidth: 3
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: chartScalesConfig,
+                    plugins: { legend: chartLegendConfig }
                 }
             });
 
+            // Busiest Days Chart
             if (busiestChartInstance) busiestChartInstance.destroy();
             const ctxBus = document.getElementById('busiestChart').getContext('2d');
             busiestChartInstance = new Chart(ctxBus, {
                 type: 'bar',
                 data: {
                     labels: labels,
-                    datasets: [{ label: 'Ingress Volume', data: bookingsCounts, backgroundColor: '#0f172a' }]
+                    datasets: [{
+                        label: 'Active Booking Counts',
+                        data: bookingsCounts,
+                        backgroundColor: '#ea580c', // Solid orange
+                        borderRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: chartScalesConfig,
+                    plugins: { legend: chartLegendConfig }
                 }
             });
         }
