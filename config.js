@@ -1,6 +1,6 @@
 // Configuration file bridging your GitHub-hosted frontend to your Google Apps Script API
 // Replace the placeholder below with your active Web App URL from Apps Script
-const API_URL = "https://script.google.com/macros/s/AKfycbxJR50eQBV4hCnJ0Q9skaSZlmL2lXKBE2VHsZdGcYQVCC9Iuk8cN3Nd2mCVZGQBy7JZuw/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbzbw9mgbDdWxjjQhVEY72xCplIk_7ZlRKBTIYm6fjFAs5Wupx7QPw1JMKzik4TINorHXw/exec";
 
 /**
  * Standard Fetch API Helper to communicate with Google Apps Script
