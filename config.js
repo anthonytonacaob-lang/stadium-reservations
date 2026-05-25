@@ -1,4 +1,4 @@
-const API_URL = "https://script.google.com/macros/s/AKfycbz7H2yDKGfbr7tQG1Wx-GJOh_yML2j250C9EUfpwNGmXO4eYSUItGGNUA-7HXfiMnSB/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbwILx1kguySFm0GqOohZwhREqvy7H6k4gupgRjDIyFl3B6oFvBIMLwTuqjSExQOng0tMQ/exec";
 
 // Standard Fetch Handler with CORS configuration
 async function callAPI(action, payload = {}) {
