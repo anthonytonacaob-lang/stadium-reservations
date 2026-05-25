@@ -4,27 +4,36 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Enterprise Security Admin Console</title>
+    <!-- Tailwind and Google Fonts Integration -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="config.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
     <style>
-        /* Modern Scrollbar Styling */
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #F0F3F8;
+        }
+        /* Custom Scrollbar */
         ::-webkit-scrollbar {
             width: 8px;
             height: 8px;
         }
         ::-webkit-scrollbar-track {
-            background: #0b0f19;
+            background: #F0F3F8;
         }
         ::-webkit-scrollbar-thumb {
-            background: #1e293b;
+            background: #CBD5E1;
             border-radius: 4px;
         }
         ::-webkit-scrollbar-thumb:hover {
-            background: #ea580c;
+            background: #00C2C3;
         }
 
-        /* Specific Printer Styling (forces light background for paper output) */
+        /* Specific Printer Styling (forces clean black and white print sheets) */
         @media print {
             body { background: white !important; color: black !important; }
             body * { visibility: hidden; }
@@ -40,85 +49,83 @@
         }
     </style>
 </head>
-<body class="bg-[#0B0F19] text-slate-100 flex flex-col md:flex-row min-h-screen font-sans">
+<body class="text-slate-800 flex flex-col md:flex-row min-h-screen">
 
     <!-- Mobile Top Navigation Bar (Hidden on Desktop) -->
-    <div class="md:hidden bg-[#080B13] border-b border-slate-800 p-4 flex justify-between items-center sticky top-0 z-50">
+    <div class="md:hidden bg-white border-b border-slate-100 p-4 flex justify-between items-center sticky top-0 z-50 shadow-sm shadow-slate-100">
         <div class="flex items-center gap-2">
-            <div class="w-6 h-6 rounded bg-orange-500 flex items-center justify-center font-black text-slate-950 text-xs">S</div>
-            <span class="text-sm font-bold text-slate-100 tracking-tight">Stadium Admin</span>
+            <div class="w-6 h-6 rounded bg-[#00C2C3] flex items-center justify-center font-black text-white text-xs">S</div>
+            <span class="text-sm font-bold text-slate-800 tracking-tight">Stadium Admin</span>
         </div>
-        <button id="mobile-menu-toggle" class="text-orange-500 focus:outline-none p-2" aria-label="Toggle Navigation Menu">
-            <!-- Hamburger Icon -->
+        <button id="mobile-menu-toggle" class="text-[#00C2C3] focus:outline-none p-2" aria-label="Toggle Navigation Menu">
             <svg id="hamburger-icon" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
             </svg>
-            <!-- Close Icon -->
             <svg id="close-icon" class="w-6 h-6 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
             </svg>
         </button>
     </div>
 
-    <!-- Mobile Dropdown Menu (Hidden by default) -->
-    <div id="mobile-menu" class="md:hidden hidden bg-[#080B13] border-b border-slate-800 p-4 space-y-1.5 sticky top-[57px] z-40 transition-all duration-200">
-        <button id="m-btn-dashboard" onclick="mobileSwitchView('dashboard')" class="w-full text-left py-2.5 px-4 rounded-lg font-semibold bg-orange-500/10 text-orange-500 block border-l-4 border-orange-500">
+    <!-- Mobile Dropdown Menu -->
+    <div id="mobile-menu" class="md:hidden hidden bg-white border-b border-slate-100 p-4 space-y-1.5 sticky top-[57px] z-40 transition-all duration-200">
+        <button id="m-btn-dashboard" onclick="mobileSwitchView('dashboard')" class="w-full text-left py-2.5 px-4 rounded-lg font-semibold bg-[#00C2C3]/10 text-[#00C2C3] block border-l-4 border-[#00C2C3]">
             📊 Telemetry Dashboard
         </button>
-        <button id="m-btn-queue" onclick="mobileSwitchView('queue')" class="w-full text-left py-2.5 px-4 rounded-lg font-semibold text-slate-400 hover:text-orange-500 block">
+        <button id="m-btn-queue" onclick="mobileSwitchView('queue')" class="w-full text-left py-2.5 px-4 rounded-lg font-semibold text-slate-500 hover:text-[#00C2C3] block">
             📋 Request Queue
         </button>
-        <button id="m-btn-godmode" onclick="mobileSwitchView('godmode')" class="w-full text-left py-2.5 px-4 rounded-lg font-semibold text-slate-400 hover:text-orange-500 block">
+        <button id="m-btn-godmode" onclick="mobileSwitchView('godmode')" class="w-full text-left py-2.5 px-4 rounded-lg font-semibold text-slate-500 hover:text-[#00C2C3] block">
             ⚡ Walk-In Override
         </button>
-        <button id="m-btn-security" onclick="mobileSwitchView('security')" class="w-full text-left py-2.5 px-4 rounded-lg font-semibold text-slate-400 hover:text-orange-500 block">
+        <button id="m-btn-security" onclick="mobileSwitchView('security')" class="w-full text-left py-2.5 px-4 rounded-lg font-semibold text-slate-500 hover:text-[#00C2C3] block">
             🛡️ Gate Schedule
         </button>
     </div>
 
-    <!-- Desktop Sidebar Navigation (Hidden on Mobile) -->
-    <aside class="w-64 bg-[#080B13] border-r border-slate-800 p-6 flex-shrink-0 flex flex-col justify-between hidden md:flex">
+    <!-- Desktop Sidebar Navigation -->
+    <aside class="w-64 bg-white shadow-xl shadow-slate-200/50 p-6 flex-shrink-0 flex flex-col justify-between hidden md:flex m-4 rounded-3xl border border-slate-100">
         <div class="space-y-8">
-            <div class="flex items-center gap-3 border-b border-slate-800 pb-5">
-                <div class="w-8 h-8 rounded-lg bg-orange-500 flex items-center justify-center font-black text-slate-950">S</div>
+            <div class="flex items-center gap-3 border-b border-slate-100 pb-5">
+                <div class="w-8 h-8 rounded-lg bg-[#00C2C3] flex items-center justify-center font-black text-white">S</div>
                 <div>
-                    <h2 class="text-base font-bold text-slate-100 leading-tight">Stadium Admin</h2>
-                    <span class="text-[10px] text-orange-500 font-bold uppercase tracking-widest">Control Room</span>
+                    <h2 class="text-base font-bold text-slate-800 leading-tight">Stadium Admin</h2>
+                    <span class="text-[10px] text-[#00C2C3] font-bold uppercase tracking-widest">Control Room</span>
                 </div>
             </div>
             
             <nav class="space-y-1 text-sm">
-                <button id="btn-dashboard" onclick="switchView('dashboard')" class="w-full text-left py-3 px-4 rounded-lg transition duration-150 flex items-center gap-3 font-semibold bg-orange-500/10 text-orange-500 border-l-4 border-orange-500">
+                <button id="btn-dashboard" onclick="switchView('dashboard')" class="w-full text-left py-3 px-4 rounded-lg transition duration-150 flex items-center gap-3 font-semibold bg-[#00C2C3]/10 text-[#00C2C3] border-l-4 border-[#00C2C3]">
                     <span>📊</span> Telemetry Dashboard
                 </button>
-                <button id="btn-queue" onclick="switchView('queue')" class="w-full text-left py-3 px-4 rounded-lg transition duration-150 flex items-center gap-3 font-semibold text-slate-400 hover:text-orange-500 hover:bg-slate-900">
+                <button id="btn-queue" onclick="switchView('queue')" class="w-full text-left py-3 px-4 rounded-lg transition duration-150 flex items-center gap-3 font-semibold text-slate-500 hover:text-[#00C2C3] hover:bg-slate-50">
                     <span>📋</span> Request Queue
                 </button>
-                <button id="btn-godmode" onclick="switchView('godmode')" class="w-full text-left py-3 px-4 rounded-lg transition duration-150 flex items-center gap-3 font-semibold text-slate-400 hover:text-orange-500 hover:bg-slate-900">
+                <button id="btn-godmode" onclick="switchView('godmode')" class="w-full text-left py-3 px-4 rounded-lg transition duration-150 flex items-center gap-3 font-semibold text-slate-500 hover:text-[#00C2C3] hover:bg-slate-50">
                     <span>⚡</span> Walk-In Override
                 </button>
-                <button id="btn-security" onclick="switchView('security')" class="w-full text-left py-3 px-4 rounded-lg transition duration-150 flex items-center gap-3 font-semibold text-slate-400 hover:text-orange-500 hover:bg-slate-900">
+                <button id="btn-security" onclick="switchView('security')" class="w-full text-left py-3 px-4 rounded-lg transition duration-150 flex items-center gap-3 font-semibold text-slate-500 hover:text-[#00C2C3] hover:bg-slate-50">
                     <span>🛡️</span> Gate Schedule
                 </button>
             </nav>
         </div>
-        <div class="text-[10px] text-slate-600 font-mono">
-            System Version v2.2<br>Theme: Orange-Blue
+        <div class="text-[10px] text-slate-400 font-mono">
+            System Version v2.3<br>Theme: Plus Jakarta Light
         </div>
     </aside>
 
     <!-- Main Workspace -->
     <main class="flex-1 p-4 md:p-8 space-y-6 md:space-y-8 overflow-y-auto">
         
-        <!-- Header -->
-        <header class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-slate-800 pb-5 gap-4">
+        <!-- Header Banner Card (Midnight Navy to Deep Burgundy Gradient) -->
+        <header class="bg-gradient-to-r from-[#1E2034] to-[#451C2C] text-white p-6 md:p-8 rounded-3xl flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 shadow-lg shadow-slate-200">
             <div>
-                <h1 id="page-title" class="text-2xl md:text-3xl font-black text-slate-100 tracking-tight">System Metrics & Utilization</h1>
-                <p class="text-xs text-slate-500 mt-1">Live tracking database and operational gateway controls</p>
+                <h1 id="page-title" class="text-2xl md:text-3xl font-extrabold tracking-tight">System Metrics & Utilization</h1>
+                <p class="text-xs text-slate-300 mt-1">Live tracking database and operational controls</p>
             </div>
-            <div class="flex items-center gap-2 bg-[#080B13] border border-slate-800 px-4 py-2 rounded-lg text-xs font-mono">
-                <span class="w-2 h-2 rounded-full bg-orange-500 animate-pulse"></span>
-                <span class="text-slate-400">Database Linked</span>
+            <div class="flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/10 px-4 py-2 rounded-xl text-xs font-mono">
+                <span class="w-2 h-2 rounded-full bg-[#00C2C3] animate-pulse"></span>
+                <span class="text-slate-100 font-semibold">Database Linked</span>
             </div>
         </header>
 
@@ -126,15 +133,15 @@
         <section id="view-dashboard" class="space-y-6">
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <!-- Line Chart Card -->
-                <div class="bg-[#0f172a]/40 backdrop-blur-md p-4 md:p-6 rounded-2xl border border-slate-800 shadow-xl shadow-black/5">
-                    <h3 class="font-bold text-slate-300 text-xs md:text-sm tracking-wider uppercase mb-4">Total Revenue Over Days ($)</h3>
+                <div class="bg-white p-4 md:p-6 rounded-3xl border border-slate-100 shadow-xl shadow-slate-100">
+                    <h3 class="font-extrabold text-slate-700 text-xs md:text-sm tracking-wider uppercase mb-4">Total Revenue Over Days ($)</h3>
                     <div class="h-64 flex items-center justify-center">
                         <canvas id="revenueChart"></canvas>
                     </div>
                 </div>
                 <!-- Bar Chart Card -->
-                <div class="bg-[#0f172a]/40 backdrop-blur-md p-4 md:p-6 rounded-2xl border border-slate-800 shadow-xl shadow-black/5">
-                    <h3 class="font-bold text-slate-300 text-xs md:text-sm tracking-wider uppercase mb-4">Busiest Days (Count)</h3>
+                <div class="bg-white p-4 md:p-6 rounded-3xl border border-slate-100 shadow-xl shadow-slate-100">
+                    <h3 class="font-extrabold text-slate-700 text-xs md:text-sm tracking-wider uppercase mb-4">Busiest Days (Count)</h3>
                     <div class="h-64 flex items-center justify-center">
                         <canvas id="busiestChart"></canvas>
                     </div>
@@ -144,14 +151,13 @@
 
         <!-- Request Queue View -->
         <section id="view-queue" class="space-y-6 hidden">
-            <div class="bg-[#0f172a]/40 backdrop-blur-md rounded-2xl border border-slate-800 shadow-xl overflow-hidden">
-                <div class="px-6 py-4 border-b border-slate-800">
-                    <h3 class="font-bold text-slate-300 uppercase tracking-wider text-sm">Active Inbound Validation Pipeline</h3>
+            <div class="bg-white rounded-3xl border border-slate-100 shadow-xl shadow-slate-100 overflow-hidden">
+                <div class="px-6 py-4 border-b border-slate-100 bg-slate-50/50">
+                    <h3 class="font-extrabold text-slate-700 uppercase tracking-wider text-sm">Active Inbound Validation Pipeline</h3>
                 </div>
-                <!-- Added Horizontal Scroll for Mobile Tables -->
                 <div class="overflow-x-auto">
                     <table class="w-full text-left border-collapse min-w-[700px]">
-                        <thead class="bg-[#080B13] text-slate-400 text-xs uppercase tracking-wider border-b border-slate-800">
+                        <thead class="bg-slate-50/50 text-slate-400 text-xs uppercase tracking-wider border-b border-slate-100">
                             <tr>
                                 <th class="p-4">ID</th>
                                 <th class="p-4">Client Name</th>
@@ -160,7 +166,7 @@
                                 <th class="p-4 text-right">Administrative Execution</th>
                             </tr>
                         </thead>
-                        <tbody id="queue-body" class="divide-y divide-slate-800/80 text-sm">
+                        <tbody id="queue-body" class="divide-y divide-slate-100 text-sm">
                             <!-- Filled dynamically via JS -->
                         </tbody>
                     </table>
@@ -170,59 +176,59 @@
 
         <!-- Walk-In override (God Mode) View -->
         <section id="view-godmode" class="space-y-6 hidden">
-            <div class="max-w-2xl mx-auto bg-[#0f172a]/40 backdrop-blur-md p-4 md:p-8 rounded-2xl border border-slate-800 shadow-2xl">
-                <h2 class="text-xl md:text-2xl font-black text-slate-100 tracking-tight">Manual Entry Override (God Mode)</h2>
-                <p class="text-xs text-slate-500 mt-1 mb-6">Forces immediate reservation authorization. Disables standard 3-hour minimum delay rules.</p>
+            <div class="max-w-2xl mx-auto bg-white p-4 md:p-8 rounded-3xl border border-slate-100 shadow-2xl">
+                <h2 class="text-xl md:text-2xl font-extrabold text-slate-800 tracking-tight">Manual Entry Override (God Mode)</h2>
+                <p class="text-xs text-slate-400 mt-1 mb-6">Immediate reservation authorization bypass tools.</p>
                 
                 <form id="god-form" class="space-y-5">
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider">Client Name</label>
-                            <input type="text" id="g-name" required class="w-full mt-1.5 bg-[#080B13] border border-slate-800 rounded-lg p-2.5 text-sm text-slate-100 focus:outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500">
+                            <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider">Client Name</label>
+                            <input type="text" id="g-name" required class="w-full mt-1.5 bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-sm text-slate-800 focus:outline-none focus:border-[#00C2C3] focus:ring-1 focus:ring-[#00C2C3]">
                         </div>
                         <div>
-                            <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider">Email Address</label>
-                            <input type="email" id="g-email" required class="w-full mt-1.5 bg-[#080B13] border border-slate-800 rounded-lg p-2.5 text-sm text-slate-100 focus:outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500">
+                            <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider">Email Address</label>
+                            <input type="email" id="g-email" required class="w-full mt-1.5 bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-sm text-slate-800 focus:outline-none focus:border-[#00C2C3] focus:ring-1 focus:ring-[#00C2C3]">
                         </div>
                     </div>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider">Sport</label>
-                            <input type="text" id="g-sport" value="Basketball" class="w-full mt-1.5 bg-[#080B13] border border-slate-800 rounded-lg p-2.5 text-sm text-slate-100 focus:outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500">
+                            <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider">Sport</label>
+                            <input type="text" id="g-sport" value="Basketball" class="w-full mt-1.5 bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-sm text-slate-800 focus:outline-none focus:border-[#00C2C3] focus:ring-1 focus:ring-[#00C2C3]">
                         </div>
                         <div>
-                            <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider">Court Selection</label>
-                            <input type="text" id="g-court" value="Court 1" class="w-full mt-1.5 bg-[#080B13] border border-slate-800 rounded-lg p-2.5 text-sm text-slate-100 focus:outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500">
+                            <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider">Court Selection</label>
+                            <input type="text" id="g-court" value="Court 1" class="w-full mt-1.5 bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-sm text-slate-800 focus:outline-none focus:border-[#00C2C3] focus:ring-1 focus:ring-[#00C2C3]">
                         </div>
                     </div>
                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
                         <div>
-                            <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider">Date</label>
-                            <input type="date" id="g-date" required class="w-full mt-1.5 bg-[#080B13] border border-slate-800 rounded-lg p-2.5 text-sm text-slate-100 focus:outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500">
+                            <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider">Date</label>
+                            <input type="date" id="g-date" required class="w-full mt-1.5 bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-sm text-slate-800 focus:outline-none focus:border-[#00C2C3] focus:ring-1 focus:ring-[#00C2C3]">
                         </div>
                         <div>
-                            <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider">Start Time</label>
-                            <input type="text" id="g-start" placeholder="08:00" class="w-full mt-1.5 bg-[#080B13] border border-slate-800 rounded-lg p-2.5 text-sm text-slate-100 focus:outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500">
+                            <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider">Start Time</label>
+                            <input type="text" id="g-start" placeholder="08:00" class="w-full mt-1.5 bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-sm text-slate-800 focus:outline-none focus:border-[#00C2C3] focus:ring-1 focus:ring-[#00C2C3]">
                         </div>
                         <div>
-                            <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider">End Time</label>
-                            <input type="text" id="g-end" placeholder="10:00" class="w-full mt-1.5 bg-[#080B13] border border-slate-800 rounded-lg p-2.5 text-sm text-slate-100 focus:outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500">
+                            <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider">End Time</label>
+                            <input type="text" id="g-end" placeholder="10:00" class="w-full mt-1.5 bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-sm text-slate-800 focus:outline-none focus:border-[#00C2C3] focus:ring-1 focus:ring-[#00C2C3]">
                         </div>
                     </div>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider">Payment Method</label>
-                            <select id="g-pay" class="w-full mt-1.5 bg-[#080B13] border border-slate-800 rounded-lg p-2.5 text-sm text-slate-100 focus:outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500">
+                            <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider">Payment Method</label>
+                            <select id="g-pay" class="w-full mt-1.5 bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-sm text-slate-800 focus:outline-none focus:border-[#00C2C3] focus:ring-1 focus:ring-[#00C2C3]">
                                 <option value="Cash">Cash Handover</option>
                                 <option value="Online">Online Bank Transfer</option>
                             </select>
                         </div>
                         <div>
-                            <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider">Reference Number</label>
-                            <input type="text" id="g-ref" placeholder="Txn ID" class="w-full mt-1.5 bg-[#080B13] border border-slate-800 rounded-lg p-2.5 text-sm text-slate-100 focus:outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500">
+                            <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider">Reference Number</label>
+                            <input type="text" id="g-ref" placeholder="Txn ID" class="w-full mt-1.5 bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-sm text-slate-800 focus:outline-none focus:border-[#00C2C3] focus:ring-1 focus:ring-[#00C2C3]">
                         </div>
                     </div>
-                    <button type="submit" class="w-full bg-orange-500 hover:bg-orange-600 text-slate-950 p-3 rounded-lg font-bold text-sm tracking-wide shadow-lg shadow-orange-500/20 transition duration-150 mt-2">
+                    <button type="submit" class="w-full bg-[#00C2C3] hover:bg-[#00B0B1] text-white p-3.5 rounded-xl font-bold text-sm tracking-wide shadow-lg shadow-[#00C2C3]/20 transition duration-150 mt-2">
                         Authorize Instant Slot Space
                     </button>
                 </form>
@@ -231,21 +237,20 @@
 
         <!-- Gate Pass Schedule View -->
         <section id="view-security" class="space-y-6 hidden">
-            <div class="bg-[#0f172a]/40 backdrop-blur-md p-4 md:p-6 rounded-2xl border border-slate-800 flex flex-col sm:flex-row justify-between items-start sm:items-center shadow-lg gap-4">
+            <div class="bg-white p-4 md:p-6 rounded-3xl border border-slate-100 flex flex-col sm:flex-row justify-between items-start sm:items-center shadow-lg gap-4">
                 <div>
-                    <h2 class="text-lg md:text-xl font-bold">Gate Guard Security Sheet</h2>
-                    <p class="text-xs text-slate-500 mt-1">Verified confirmation lists generated for secure facility access validation.</p>
+                    <h2 class="text-lg md:text-xl font-bold text-slate-800">Gate Guard Security Sheet</h2>
+                    <p class="text-xs text-slate-400 mt-1">Ingress verification lists generated for secure access validation.</p>
                 </div>
-                <button onclick="printGateSchedule()" class="w-full sm:w-auto bg-orange-500 hover:bg-orange-600 text-slate-950 px-5 py-2.5 rounded-lg text-xs font-bold shadow-md shadow-orange-500/15 transition duration-150">
+                <button onclick="printGateSchedule()" class="w-full sm:w-auto bg-[#00C2C3] hover:bg-[#00B0B1] text-white px-5 py-2.5 rounded-xl text-xs font-bold shadow-md shadow-[#00C2C3]/15 transition duration-150">
                     Generate Print List
                 </button>
             </div>
             
-            <div class="bg-[#0f172a]/40 backdrop-blur-md rounded-2xl border border-slate-800 shadow-xl overflow-hidden">
-                <!-- Added Horizontal Scroll for Mobile Tables -->
+            <div class="bg-white rounded-3xl border border-slate-100 shadow-xl overflow-hidden">
                 <div class="overflow-x-auto">
                     <table class="w-full text-left min-w-[600px]">
-                        <thead class="bg-[#080B13] text-slate-400 text-xs uppercase tracking-wider border-b border-slate-800">
+                        <thead class="bg-slate-50/50 text-slate-400 text-xs uppercase tracking-wider border-b border-slate-100">
                             <tr>
                                 <th class="p-4">Secure Pass #</th>
                                 <th class="p-4">Location</th>
@@ -253,7 +258,7 @@
                                 <th class="p-4">Verified Ingress Guest Name</th>
                             </tr>
                         </thead>
-                        <tbody id="security-table-body" class="text-sm divide-y divide-slate-800/80">
+                        <tbody id="security-table-body" class="text-sm divide-y divide-slate-100">
                             <!-- Filled dynamically via JS -->
                         </tbody>
                     </table>
@@ -276,7 +281,6 @@
             refreshAdminData();
         });
 
-        // Toggle logic for mobile hamburger drawer
         function setupMobileMenu() {
             const toggleBtn = document.getElementById('mobile-menu-toggle');
             const mobileMenu = document.getElementById('mobile-menu');
@@ -297,13 +301,11 @@
             });
         }
 
-        // Bridge function for mobile selections
         function mobileSwitchView(viewName) {
             const mobileMenu = document.getElementById('mobile-menu');
             const hamburgerIcon = document.getElementById('hamburger-icon');
             const closeIcon = document.getElementById('close-icon');
 
-            // Close menu drawer
             mobileMenu.classList.add('hidden');
             hamburgerIcon.classList.remove('hidden');
             closeIcon.classList.add('hidden');
@@ -311,7 +313,6 @@
             switchView(viewName);
         }
 
-        // Unified Sidebar & Mobile view state management
         function switchView(viewName) {
             const views = ['dashboard', 'queue', 'godmode', 'security'];
             const titles = {
@@ -323,28 +324,22 @@
 
             views.forEach(v => {
                 document.getElementById(`view-${v}`).classList.add('hidden');
+                document.getElementById(`btn-${v}`).className = "w-full text-left py-3 px-4 rounded-lg transition duration-150 flex items-center gap-3 font-semibold text-slate-500 hover:text-[#00C2C3] hover:bg-slate-50";
                 
-                // Reset desktop tab styles
-                document.getElementById(`btn-${v}`).className = "w-full text-left py-3 px-4 rounded-lg transition duration-150 flex items-center gap-3 font-semibold text-slate-400 hover:text-orange-500 hover:bg-slate-900";
-                
-                // Reset mobile tab styles
                 const mBtn = document.getElementById(`m-btn-${v}`);
                 if (mBtn) {
-                    mBtn.className = "w-full text-left py-2.5 px-4 rounded-lg font-semibold text-slate-400 hover:text-orange-500 block";
+                    mBtn.className = "w-full text-left py-2.5 px-4 rounded-lg font-semibold text-slate-500 hover:text-[#00C2C3] block";
                 }
             });
 
-            // Set active panels
             document.getElementById(`view-${viewName}`).classList.remove('hidden');
             document.getElementById(`page-title`).innerText = titles[viewName];
             
-            // Set desktop tab active highlights
-            document.getElementById(`btn-${viewName}`).className = "w-full text-left py-3 px-4 rounded-lg transition duration-150 flex items-center gap-3 font-semibold bg-orange-500/10 text-orange-500 border-l-4 border-orange-500";
+            document.getElementById(`btn-${viewName}`).className = "w-full text-left py-3 px-4 rounded-lg transition duration-150 flex items-center gap-3 font-semibold bg-[#00C2C3]/10 text-[#00C2C3] border-l-4 border-[#00C2C3]";
             
-            // Set mobile tab active highlights
             const mActiveBtn = document.getElementById(`m-btn-${viewName}`);
             if (mActiveBtn) {
-                mActiveBtn.className = "w-full text-left py-2.5 px-4 rounded-lg font-semibold bg-orange-500/10 text-orange-500 block border-l-4 border-orange-500";
+                mActiveBtn.className = "w-full text-left py-2.5 px-4 rounded-lg font-semibold bg-[#00C2C3]/10 text-[#00C2C3] block border-l-4 border-[#00C2C3]";
             }
         }
 
@@ -366,28 +361,28 @@
             const pendingList = bookingsData.filter(b => b.status === 'PENDING');
             
             if (pendingList.length === 0) {
-                body.innerHTML = `<tr><td colspan="5" class="p-6 text-center text-slate-500">No operations pending execution inside the queue.</td></tr>`;
+                body.innerHTML = `<tr><td colspan="5" class="p-6 text-center text-slate-400">No operations pending execution inside the queue.</td></tr>`;
                 return;
             }
 
             pendingList.forEach(b => {
                 body.innerHTML += `
-                    <tr class="hover:bg-slate-900/35 transition duration-100">
-                        <td class="p-4 font-mono font-bold text-orange-500">#${b.id}</td>
+                    <tr class="hover:bg-slate-50/50 transition duration-100">
+                        <td class="p-4 font-mono font-bold text-[#00C2C3]">#${b.id}</td>
                         <td class="p-4">
-                            <div class="font-bold text-slate-100">${b.name}</div>
-                            <div class="text-xs text-slate-500 mt-0.5">${b.email}</div>
+                            <div class="font-bold text-slate-800">${b.name}</div>
+                            <div class="text-xs text-slate-400 mt-0.5">${b.email}</div>
                         </td>
                         <td class="p-4">
-                            <span class="text-[10px] font-bold px-2.5 py-1 bg-orange-500/10 text-orange-500 border border-orange-500/20 rounded-full uppercase tracking-wider">${b.sport}</span>
-                            <div class="text-xs text-slate-400 mt-2">${b.court} | ${b.date}</div>
-                            <div class="text-xs font-mono font-bold text-slate-300 mt-1">${b.start} - ${b.end}</div>
+                            <span class="text-[10px] font-bold px-2.5 py-1 bg-[#00C2C3]/10 text-[#00C2C3] border border-[#00C2C3]/20 rounded-full uppercase tracking-wider">${b.sport}</span>
+                            <div class="text-xs text-slate-500 mt-2">${b.court} | ${b.date}</div>
+                            <div class="text-xs font-mono font-bold text-slate-600 mt-1">${b.start} - ${b.end}</div>
                         </td>
-                        <td class="p-4 font-black text-slate-100">$${Number(b.cost).toFixed(2)}</td>
+                        <td class="p-4 font-black text-slate-800">$${Number(b.cost).toFixed(2)}</td>
                         <td class="p-4 text-right">
                             <div class="flex items-center justify-end gap-2">
-                                <input type="number" id="charge-${b.id}" placeholder="+$0.00" class="w-20 bg-[#080B13] border border-slate-800 rounded p-1.5 text-xs text-slate-100 focus:outline-none focus:border-orange-500 text-center">
-                                <button onclick="actionRequest('${b.id}', 'APPROVE')" class="bg-orange-500 text-slate-950 font-bold px-3 py-1.5 rounded text-xs hover:bg-orange-600 transition">Approve</button>
+                                <input type="number" id="charge-${b.id}" placeholder="+$0.00" class="w-20 bg-slate-50 border border-slate-200 rounded p-1.5 text-xs text-slate-800 focus:outline-none focus:border-[#00C2C3] text-center">
+                                <button onclick="actionRequest('${b.id}', 'APPROVE')" class="bg-[#00C2C3] text-white font-bold px-3 py-1.5 rounded text-xs hover:bg-[#00B0B1] transition">Approve</button>
                                 <button onclick="triggerRejectPrompt('${b.id}')" class="border border-red-500/30 text-red-500 hover:bg-red-500/10 font-bold px-3 py-1.5 rounded text-xs transition">Reject</button>
                             </div>
                         </td>
@@ -442,7 +437,7 @@
 
             const printArea = document.getElementById('printable-section');
             const waiverHtml = `
-                <div style="font-family: Arial, sans-serif; padding: 40px; color: black !important; background: white !important;">
+                <div style="font-family: 'Plus Jakarta Sans', Arial, sans-serif; padding: 40px; color: black !important; background: white !important;">
                     <div style="text-align: center; border-bottom: 2px solid #000; padding-bottom: 15px; margin-bottom: 30px;">
                         <h1 style="font-size: 28px; font-weight: 900; margin: 0; text-transform: uppercase;">SportPlex Arena</h1>
                         <p style="font-size: 11px; margin: 5px 0 0 0;">SECURE INGRESS RECEIPT & RETAINER SHEET</p>
@@ -463,7 +458,7 @@
                     </div>
                     <div style="border-top: 1px solid #ccc; padding-top: 20px; font-size: 10px; line-height: 1.5;">
                         <h3 style="font-size: 12px; margin-top: 0; text-transform: uppercase;">Legal Liability Disclaimer of Liability</h3>
-                        <p>By signature below, the participant agrees to waive facility operations claims of physical injuries, damages, or equipment errors inside complex grounds. All basic terms within regular coverage systems remain in effect.</p>
+                        <p>By signature below, the participant agrees to waive facility operations claims of physical injuries, damages, or equipment errors inside complex grounds.</p>
                         <div style="display: flex; justify-content: space-between; margin-top: 50px;">
                             <span style="border-top: 1px solid #000; width: 40%; text-align: center; padding-top: 8px;">Participant Signature: <strong>${b.name}</strong></span>
                             <span style="border-top: 1px solid #000; width: 40%; text-align: center; padding-top: 8px;">Supervisor Authorization</span>
@@ -483,16 +478,16 @@
             const confirmed = bookingsData.filter(b => b.status === 'CONFIRMED');
 
             if (confirmed.length === 0) {
-                body.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-slate-500">No confirmed lists logged for modern gate pass verification.</td></tr>`;
+                body.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-slate-400">No confirmed lists logged for modern gate pass verification.</td></tr>`;
                 return;
             }
             confirmed.forEach(b => {
                 body.innerHTML += `
-                    <tr class="hover:bg-slate-900/35 transition duration-100">
-                        <td class="p-4 font-mono font-bold text-orange-500">#${b.id}</td>
-                        <td class="p-4 text-slate-200 font-semibold">${b.court}</td>
-                        <td class="p-4 font-mono text-slate-300">${b.start} - ${b.end}</td>
-                        <td class="p-4 font-bold text-slate-100">${b.name}</td>
+                    <tr class="hover:bg-slate-50/50 transition duration-100">
+                        <td class="p-4 font-mono font-bold text-[#00C2C3]">#${b.id}</td>
+                        <td class="p-4 text-slate-800 font-semibold">${b.court}</td>
+                        <td class="p-4 font-mono text-slate-600">${b.start} - ${b.end}</td>
+                        <td class="p-4 font-bold text-slate-800">${b.name}</td>
                     </tr>
                 `;
             });
@@ -513,7 +508,7 @@
                 `;
             });
             printArea.innerHTML = `
-                <div style="font-family: Arial, sans-serif; padding: 30px; color: black !important; background: white !important;">
+                <div style="font-family: 'Plus Jakarta Sans', Arial, sans-serif; padding: 30px; color: black !important; background: white !important;">
                     <h2 style="text-align: center; border-bottom: 2px solid #000; padding-bottom: 10px; text-transform: uppercase;">Ingress Verification Master Gate Log</h2>
                     <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
                         <thead>
@@ -562,7 +557,7 @@
             }
         }
 
-        // Palette matching Chart.js Styling Configuration
+        // Palette matching Chart.js Styling Configuration (Matching BidiBet Reference Layout)
         function buildCharts() {
             const confirmed = bookingsData.filter(b => b.status === 'CONFIRMED');
             const daysMap = {};
@@ -579,20 +574,20 @@
 
             const chartScalesConfig = {
                 x: {
-                    grid: { color: '#1e293b' },
-                    ticks: { color: '#94a3b8', font: { family: 'monospace' } }
+                    grid: { color: '#F1F5F9' },
+                    ticks: { color: '#94A3B8', font: { family: 'Plus Jakarta Sans', weight: 'bold' } }
                 },
                 y: {
-                    grid: { color: '#1e293b' },
-                    ticks: { color: '#94a3b8', font: { family: 'monospace' } }
+                    grid: { color: '#F1F5F9' },
+                    ticks: { color: '#94A3B8', font: { family: 'Plus Jakarta Sans', weight: 'bold' } }
                 }
             };
 
             const chartLegendConfig = {
-                labels: { color: '#cbd5e1', font: { weight: 'bold' } }
+                labels: { color: '#475569', font: { family: 'Plus Jakarta Sans', weight: 'bold' } }
             };
 
-            // Revenue Chart
+            // Revenue Chart (Teal Accent Outline with soft glow fill)
             if (revenueChartInstance) revenueChartInstance.destroy();
             const ctxRev = document.getElementById('revenueChart').getContext('2d');
             revenueChartInstance = new Chart(ctxRev, {
@@ -602,10 +597,10 @@
                     datasets: [{
                         label: 'Gross Revenue Inflow ($)',
                         data: revenues,
-                        borderColor: '#ea580c',
-                        backgroundColor: 'rgba(234, 88, 12, 0.12)',
+                        borderColor: '#00C2C3',
+                        backgroundColor: 'rgba(0, 194, 195, 0.08)',
                         fill: true,
-                        tension: 0.25,
+                        tension: 0.3,
                         borderWidth: 3
                     }]
                 },
@@ -617,7 +612,7 @@
                 }
             });
 
-            // Busiest Days Chart
+            // Busiest Days Chart (Teal & Coral Alternating Bar Theme)
             if (busiestChartInstance) busiestChartInstance.destroy();
             const ctxBus = document.getElementById('busiestChart').getContext('2d');
             busiestChartInstance = new Chart(ctxBus, {
@@ -627,7 +622,7 @@
                     datasets: [{
                         label: 'Active Booking Counts',
                         data: bookingsCounts,
-                        backgroundColor: '#ea580c',
+                        backgroundColor: ['#B5BDF2', '#FFA570', '#00C2C3'], // Pastel Blue, Soft Coral, and Teal from reference
                         borderRadius: 6
                     }]
                 },
