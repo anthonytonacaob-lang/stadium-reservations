@@ -2,75 +2,122 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sports Complex Booking</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="config.js"></script>
     <style>
+        /* Glassmorphism Panel Styling */
         .glass {
-            background: rgba(255, 255, 255, 0.85);
+            background: rgba(15, 23, 42, 0.4);
             backdrop-filter: blur(8px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* Modern Scrollbar Styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0b0f19;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1e293b;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #ea580c;
         }
     </style>
 </head>
-<body class="bg-gradient-to-br from-indigo-50 to-blue-100 min-h-screen text-gray-800 p-4">
+<body class="bg-[#0B0F19] text-slate-100 min-h-screen p-4 md:p-8 font-sans">
 
     <div class="max-w-7xl mx-auto space-y-8">
-        <header class="text-center py-6">
-            <h1 class="text-4xl font-extrabold text-indigo-950 tracking-tight">Arena Reservations</h1>
-            <p class="text-gray-600 mt-2">Dynamic Live Schedule & Booking Portal</p>
+        <!-- Header -->
+        <header class="text-center py-6 border-b border-slate-800/80">
+            <h1 class="text-3xl md:text-4xl font-extrabold text-slate-100 tracking-tight">Arena Reservations</h1>
+            <p class="text-xs text-slate-500 mt-2 tracking-wider uppercase">Live Schedule Grid & Automated Booking System</p>
         </header>
 
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-            <div class="lg:col-span-7 glass rounded-2xl p-6 shadow-xl">
-                <div class="flex justify-between items-center mb-6">
-                    <h2 class="text-xl font-bold text-gray-800">Live Court Availability</h2>
-                    <input type="date" id="view-date" class="border border-gray-300 rounded-lg p-2 focus:ring focus:ring-indigo-200">
+        <!-- Main Responsive Layout Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 md:gap-8">
+            
+            <!-- Left Side: Live Dynamic Availability Schedule -->
+            <div class="lg:col-span-7 glass rounded-2xl p-4 md:p-6 shadow-xl shadow-black/20">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+                    <div>
+                        <h2 class="text-lg font-bold text-slate-100">Live Court Availability</h2>
+                        <p class="text-xs text-slate-500 mt-0.5">Updated in real-time from our system database</p>
+                    </div>
+                    <input type="date" id="view-date" class="w-full sm:w-auto bg-[#080B13] border border-slate-800 rounded-lg p-2.5 text-sm text-slate-100 focus:outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500">
                 </div>
+
+                <!-- Horizontal Scroll Handler for Narrow Screen Layouts -->
                 <div class="overflow-x-auto">
-                    <table class="w-full text-left border-collapse">
+                    <table class="w-full text-left border-collapse min-w-[450px]">
                         <thead>
-                            <tr class="border-b border-gray-200 text-sm font-semibold text-gray-500">
-                                <th class="py-2">Time Slot</th>
-                                <th class="py-2 text-center">Court 1</th>
-                                <th class="py-2 text-center">Court 2</th>
-                                <th class="py-2 text-center">Court 3</th>
+                            <tr class="border-b border-slate-800 text-xs font-bold text-slate-400 uppercase tracking-wider">
+                                <th class="py-3">Time Slot</th>
+                                <th class="py-3 text-center">Court 1</th>
+                                <th class="py-3 text-center">Court 2</th>
+                                <th class="py-3 text-center">Court 3</th>
                             </tr>
                         </thead>
-                        <tbody id="availability-grid" class="text-sm"></tbody>
+                        <tbody id="availability-grid" class="text-sm divide-y divide-slate-800/50">
+                            <!-- Populated Dynamically via JavaScript -->
+                        </tbody>
                     </table>
                 </div>
             </div>
 
+            <!-- Right Side: Standard Rate Matrix & Reservation Entry Portal -->
             <div class="lg:col-span-5 space-y-6">
-                <div class="glass rounded-2xl p-6 shadow-xl">
-                    <h3 class="font-bold text-lg mb-3">Rate Sheet</h3>
-                    <div class="grid grid-cols-2 gap-2 text-xs text-gray-600">
-                        <div>🏀 Day Rate (6AM - 5PM): <b class="text-indigo-900">$15/hr</b></div>
-                        <div>🌙 Night Rate (5PM - 10PM): <b class="text-indigo-900">$25/hr</b></div>
-                        <div>📦 Pkg A (Whole Gym): <b class="text-indigo-900">$80/hr</b></div>
-                        <div>📦 Pkg B (Court 1): <b class="text-indigo-900">$20/hr</b></div>
+                
+                <!-- Rates Display Matrix -->
+                <div class="glass rounded-2xl p-4 md:p-6 shadow-xl border border-slate-800/50">
+                    <h3 class="font-bold text-slate-300 text-xs tracking-wider uppercase mb-3">Facility Rate Sheet</h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs text-slate-400">
+                        <div class="flex justify-between sm:block">
+                            <span>🏀 Day Rate (6AM - 5PM):</span> 
+                            <b class="text-orange-500 block sm:mt-0.5">$15.00 / hr</b>
+                        </div>
+                        <div class="flex justify-between sm:block">
+                            <span>🌙 Night Rate (5PM - 10PM):</span> 
+                            <b class="text-orange-500 block sm:mt-0.5">$25.00 / hr</b>
+                        </div>
+                        <div class="flex justify-between sm:block">
+                            <span>📦 Package A (Whole Gym):</span> 
+                            <b class="text-orange-500 block sm:mt-0.5">$80.00 / hr</b>
+                        </div>
+                        <div class="flex justify-between sm:block">
+                            <span>📦 Package B (Court 1 Only):</span> 
+                            <b class="text-orange-500 block sm:mt-0.5">$20.00 / hr</b>
+                        </div>
                     </div>
                 </div>
 
-                <div class="glass rounded-2xl p-6 shadow-xl relative overflow-hidden">
-                    <div id="countdown-banner" class="hidden bg-yellow-500 text-yellow-950 font-semibold p-2 text-center text-xs absolute top-0 left-0 right-0">
-                        Holding spot! Submit inside: <span id="timer">20:00</span>
+                <!-- Form Card -->
+                <div class="glass rounded-2xl p-4 md:p-6 shadow-xl relative overflow-hidden">
+                    <div id="countdown-banner" class="hidden bg-orange-500 text-slate-950 font-bold p-2 text-center text-xs absolute top-0 left-0 right-0 tracking-wider">
+                        Holding booking space! Submit within: <span id="timer" class="font-mono">20:00</span>
                     </div>
 
                     <form id="booking-form" class="space-y-4 mt-2">
                         <div>
-                            <label class="block text-xs font-semibold uppercase tracking-wider text-gray-500">Full Name</label>
-                            <input type="text" id="form-name" required class="w-full mt-1 border border-gray-300 rounded-lg p-2 focus:ring focus:ring-indigo-200">
+                            <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400">Full Name</label>
+                            <input type="text" id="form-name" required class="w-full mt-1.5 bg-[#080B13] border border-slate-800 rounded-lg p-2.5 text-sm text-slate-100 focus:outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500">
                         </div>
+
                         <div>
-                            <label class="block text-xs font-semibold uppercase tracking-wider text-gray-500">Email Address</label>
-                            <input type="email" id="form-email" required class="w-full mt-1 border border-gray-300 rounded-lg p-2 focus:ring focus:ring-indigo-200">
+                            <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400">Email Address</label>
+                            <input type="email" id="form-email" required class="w-full mt-1.5 bg-[#080B13] border border-slate-800 rounded-lg p-2.5 text-sm text-slate-100 focus:outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500">
                         </div>
-                        <div class="grid grid-cols-2 gap-4">
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div>
-                                <label class="block text-xs font-semibold uppercase tracking-wider text-gray-500">Sport / Package</label>
-                                <select id="form-sport" class="w-full mt-1 border border-gray-300 rounded-lg p-2 focus:ring focus:ring-indigo-200">
+                                <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400">Sport / Package</label>
+                                <select id="form-sport" class="w-full mt-1.5 bg-[#080B13] border border-slate-800 rounded-lg p-2.5 text-sm text-slate-100 focus:outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500">
                                     <option value="Basketball">Basketball</option>
                                     <option value="Volleyball">Volleyball</option>
                                     <option value="Badminton">Badminton</option>
@@ -81,8 +128,8 @@
                                 </select>
                             </div>
                             <div>
-                                <label class="block text-xs font-semibold uppercase tracking-wider text-gray-500">Court Selection</label>
-                                <select id="form-court" class="w-full mt-1 border border-gray-300 rounded-lg p-2 focus:ring focus:ring-indigo-200">
+                                <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400">Court Selection</label>
+                                <select id="form-court" class="w-full mt-1.5 bg-[#080B13] border border-slate-800 rounded-lg p-2.5 text-sm text-slate-100 focus:outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500">
                                     <option value="Court 1">Court 1</option>
                                     <option value="Court 2">Court 2</option>
                                     <option value="Court 3">Court 3</option>
@@ -90,25 +137,29 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="grid grid-cols-3 gap-2">
+
+                        <!-- Stacked on mobile screens, splits into 3 columns on desktops to prevent squishing [2] -->
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
                             <div>
-                                <label class="block text-xs font-semibold uppercase tracking-wider text-gray-500">Date</label>
-                                <input type="date" id="form-date" required class="w-full mt-1 border border-gray-300 rounded-lg p-2 text-sm">
+                                <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400">Date</label>
+                                <input type="date" id="form-date" required class="w-full mt-1.5 bg-[#080B13] border border-slate-800 rounded-lg p-2.5 text-sm text-slate-100 focus:outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500">
                             </div>
                             <div>
-                                <label class="block text-xs font-semibold uppercase tracking-wider text-gray-500">Start Time</label>
-                                <select id="form-start" class="w-full mt-1 border border-gray-300 rounded-lg p-2 text-sm"></select>
+                                <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400">Start Time</label>
+                                <select id="form-start" class="w-full mt-1.5 bg-[#080B13] border border-slate-800 rounded-lg p-2.5 text-sm text-slate-100 focus:outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500"></select>
                             </div>
                             <div>
-                                <label class="block text-xs font-semibold uppercase tracking-wider text-gray-500">End Time</label>
-                                <select id="form-end" class="w-full mt-1 border border-gray-300 rounded-lg p-2 text-sm"></select>
+                                <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400">End Time</label>
+                                <select id="form-end" class="w-full mt-1.5 bg-[#080B13] border border-slate-800 rounded-lg p-2.5 text-sm text-slate-100 focus:outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500"></select>
                             </div>
                         </div>
-                        <div class="bg-indigo-50/50 rounded-lg p-4 flex justify-between items-center">
-                            <span class="text-sm font-medium text-gray-600">Calculated Cost:</span>
-                            <span id="price-display" class="text-2xl font-black text-indigo-900">$0.00</span>
+
+                        <div class="bg-[#080B13] border border-slate-800/80 rounded-xl p-4 flex justify-between items-center shadow-inner">
+                            <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Calculated Cost:</span>
+                            <span id="price-display" class="text-2xl font-black text-orange-500">$0.00</span>
                         </div>
-                        <button type="submit" class="w-full bg-indigo-600 text-white font-semibold py-3 rounded-lg shadow-lg hover:bg-indigo-700 transition duration-150">
+
+                        <button type="submit" class="w-full bg-orange-500 hover:bg-orange-600 text-slate-950 font-bold py-3.5 rounded-lg shadow-lg shadow-orange-500/10 transition duration-150">
                             Lock Booking Space
                         </button>
                     </form>
@@ -117,11 +168,12 @@
         </div>
     </div>
 
-    <div id="alert-modal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
-        <div class="glass max-w-md w-full rounded-2xl p-6 shadow-2xl text-center space-y-4">
-            <h3 id="modal-title" class="text-xl font-bold"></h3>
-            <p id="modal-message" class="text-gray-600 text-sm"></p>
-            <button id="modal-close" class="bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 font-semibold text-sm">Dismiss</button>
+    <!-- Modified Glass Alert Modal Overlay -->
+    <div id="alert-modal" class="hidden fixed inset-0 bg-black/60 flex items-center justify-center p-4 z-50">
+        <div class="glass max-w-md w-full rounded-2xl p-6 shadow-2xl text-center space-y-4 border border-slate-800">
+            <h3 id="modal-title" class="text-lg font-black text-slate-100 tracking-tight"></h3>
+            <p id="modal-message" class="text-slate-400 text-sm leading-relaxed"></p>
+            <button id="modal-close" class="bg-orange-500 text-slate-950 font-bold px-6 py-2.5 rounded-lg hover:bg-orange-600 transition text-sm">Dismiss</button>
         </div>
     </div>
 
@@ -201,7 +253,6 @@
 
         async function refreshData() {
             try {
-                // RESTful Call replacing google.script.run
                 const data = await callAPI('getActiveBookings');
                 allBookings = data;
                 renderGrid();
@@ -222,8 +273,8 @@
                     let c2 = getStatus(dateVal, time, 'Court 2');
                     let c3 = getStatus(dateVal, time, 'Court 3');
                     gridBody.innerHTML += `
-                        <tr class="border-b border-gray-100">
-                            <td class="py-2 font-semibold text-gray-500">${time}</td>
+                        <tr class="border-b border-slate-800/40 hover:bg-slate-900/10">
+                            <td class="py-2.5 font-semibold text-slate-400">${time}</td>
                             <td class="p-1">${renderStatusBadge(c1)}</td>
                             <td class="p-1">${renderStatusBadge(c2)}</td>
                             <td class="p-1">${renderStatusBadge(c3)}</td>
@@ -254,13 +305,14 @@
             return h + (m/60);
         }
 
+        // Updated status badges to fit the modern dark orange/blue look
         function renderStatusBadge(status) {
             if (status === 'CONFIRMED') {
-                return `<div class="bg-red-500 text-white rounded text-center text-xs py-1 font-bold">TAKEN</div>`;
+                return `<div class="bg-red-500/10 border border-red-500/20 text-red-400 rounded text-center text-[10px] py-1 font-bold tracking-wider uppercase">TAKEN</div>`;
             } else if (status === 'PENDING') {
-                return `<div class="bg-yellow-500 text-yellow-950 rounded text-center text-xs py-1 font-bold">RESERVED</div>`;
+                return `<div class="bg-yellow-500/10 border border-yellow-500/20 text-yellow-400 rounded text-center text-[10px] py-1 font-bold tracking-wider uppercase">RESERVED</div>`;
             }
-            return `<div class="bg-emerald-100 text-emerald-800 rounded text-center text-xs py-1">OPEN</div>`;
+            return `<div class="bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 rounded text-center text-[10px] py-1 font-bold tracking-wider uppercase">OPEN</div>`;
         }
 
         function calculateLivePrice() {
@@ -324,7 +376,6 @@
                 godMode: 'false'
             };
 
-            // Post to apps script API
             try {
                 const res = await callAPI('submitBooking', formData);
                 if (res.success) {
