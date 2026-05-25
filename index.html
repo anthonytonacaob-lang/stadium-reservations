@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Enterprise Security Admin Console</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -12,7 +13,7 @@
             width: 8px;
             height: 8px;
         }
-        ::-webkit-scrollbar-track {https://github.com/anthonytonacaob-lang/stadium-reservations/blob/main/index.html
+        ::-webkit-scrollbar-track {
             background: #0b0f19;
         }
         ::-webkit-scrollbar-thumb {
@@ -39,9 +40,43 @@
         }
     </style>
 </head>
-<body class="bg-[#0B0F19] text-slate-100 flex min-h-screen font-sans">
+<body class="bg-[#0B0F19] text-slate-100 flex flex-col md:flex-row min-h-screen font-sans">
 
-    <!-- Sidebar Navigation -->
+    <!-- Mobile Top Navigation Bar (Hidden on Desktop) -->
+    <div class="md:hidden bg-[#080B13] border-b border-slate-800 p-4 flex justify-between items-center sticky top-0 z-50">
+        <div class="flex items-center gap-2">
+            <div class="w-6 h-6 rounded bg-orange-500 flex items-center justify-center font-black text-slate-950 text-xs">S</div>
+            <span class="text-sm font-bold text-slate-100 tracking-tight">Stadium Admin</span>
+        </div>
+        <button id="mobile-menu-toggle" class="text-orange-500 focus:outline-none p-2" aria-label="Toggle Navigation Menu">
+            <!-- Hamburger Icon -->
+            <svg id="hamburger-icon" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+            </svg>
+            <!-- Close Icon -->
+            <svg id="close-icon" class="w-6 h-6 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+        </button>
+    </div>
+
+    <!-- Mobile Dropdown Menu (Hidden by default) -->
+    <div id="mobile-menu" class="md:hidden hidden bg-[#080B13] border-b border-slate-800 p-4 space-y-1.5 sticky top-[57px] z-40 transition-all duration-200">
+        <button id="m-btn-dashboard" onclick="mobileSwitchView('dashboard')" class="w-full text-left py-2.5 px-4 rounded-lg font-semibold bg-orange-500/10 text-orange-500 block border-l-4 border-orange-500">
+            📊 Telemetry Dashboard
+        </button>
+        <button id="m-btn-queue" onclick="mobileSwitchView('queue')" class="w-full text-left py-2.5 px-4 rounded-lg font-semibold text-slate-400 hover:text-orange-500 block">
+            📋 Request Queue
+        </button>
+        <button id="m-btn-godmode" onclick="mobileSwitchView('godmode')" class="w-full text-left py-2.5 px-4 rounded-lg font-semibold text-slate-400 hover:text-orange-500 block">
+            ⚡ Walk-In Override
+        </button>
+        <button id="m-btn-security" onclick="mobileSwitchView('security')" class="w-full text-left py-2.5 px-4 rounded-lg font-semibold text-slate-400 hover:text-orange-500 block">
+            🛡️ Gate Schedule
+        </button>
+    </div>
+
+    <!-- Desktop Sidebar Navigation (Hidden on Mobile) -->
     <aside class="w-64 bg-[#080B13] border-r border-slate-800 p-6 flex-shrink-0 flex flex-col justify-between hidden md:flex">
         <div class="space-y-8">
             <div class="flex items-center gap-3 border-b border-slate-800 pb-5">
@@ -73,12 +108,12 @@
     </aside>
 
     <!-- Main Workspace -->
-    <main class="flex-1 p-8 space-y-8 overflow-y-auto">
+    <main class="flex-1 p-4 md:p-8 space-y-6 md:space-y-8 overflow-y-auto">
         
         <!-- Header -->
-        <header class="flex justify-between items-center border-b border-slate-800 pb-5">
+        <header class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-slate-800 pb-5 gap-4">
             <div>
-                <h1 id="page-title" class="text-3xl font-black text-slate-100 tracking-tight">System Metrics & Utilization</h1>
+                <h1 id="page-title" class="text-2xl md:text-3xl font-black text-slate-100 tracking-tight">System Metrics & Utilization</h1>
                 <p class="text-xs text-slate-500 mt-1">Live tracking database and operational gateway controls</p>
             </div>
             <div class="flex items-center gap-2 bg-[#080B13] border border-slate-800 px-4 py-2 rounded-lg text-xs font-mono">
@@ -91,15 +126,15 @@
         <section id="view-dashboard" class="space-y-6">
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <!-- Line Chart Card -->
-                <div class="bg-[#0f172a]/40 backdrop-blur-md p-6 rounded-2xl border border-slate-800 shadow-xl shadow-black/5">
-                    <h3 class="font-bold text-slate-300 text-sm tracking-wider uppercase mb-4">Total Revenue Over Days ($)</h3>
+                <div class="bg-[#0f172a]/40 backdrop-blur-md p-4 md:p-6 rounded-2xl border border-slate-800 shadow-xl shadow-black/5">
+                    <h3 class="font-bold text-slate-300 text-xs md:text-sm tracking-wider uppercase mb-4">Total Revenue Over Days ($)</h3>
                     <div class="h-64 flex items-center justify-center">
                         <canvas id="revenueChart"></canvas>
                     </div>
                 </div>
                 <!-- Bar Chart Card -->
-                <div class="bg-[#0f172a]/40 backdrop-blur-md p-6 rounded-2xl border border-slate-800 shadow-xl shadow-black/5">
-                    <h3 class="font-bold text-slate-300 text-sm tracking-wider uppercase mb-4">Busiest Days (Count)</h3>
+                <div class="bg-[#0f172a]/40 backdrop-blur-md p-4 md:p-6 rounded-2xl border border-slate-800 shadow-xl shadow-black/5">
+                    <h3 class="font-bold text-slate-300 text-xs md:text-sm tracking-wider uppercase mb-4">Busiest Days (Count)</h3>
                     <div class="h-64 flex items-center justify-center">
                         <canvas id="busiestChart"></canvas>
                     </div>
@@ -113,8 +148,9 @@
                 <div class="px-6 py-4 border-b border-slate-800">
                     <h3 class="font-bold text-slate-300 uppercase tracking-wider text-sm">Active Inbound Validation Pipeline</h3>
                 </div>
+                <!-- Added Horizontal Scroll for Mobile Tables -->
                 <div class="overflow-x-auto">
-                    <table class="w-full text-left border-collapse">
+                    <table class="w-full text-left border-collapse min-w-[700px]">
                         <thead class="bg-[#080B13] text-slate-400 text-xs uppercase tracking-wider border-b border-slate-800">
                             <tr>
                                 <th class="p-4">ID</th>
@@ -134,8 +170,8 @@
 
         <!-- Walk-In override (God Mode) View -->
         <section id="view-godmode" class="space-y-6 hidden">
-            <div class="max-w-2xl mx-auto bg-[#0f172a]/40 backdrop-blur-md p-8 rounded-2xl border border-slate-800 shadow-2xl">
-                <h2 class="text-2xl font-black text-slate-100 tracking-tight">Manual Entry Override (God Mode)</h2>
+            <div class="max-w-2xl mx-auto bg-[#0f172a]/40 backdrop-blur-md p-4 md:p-8 rounded-2xl border border-slate-800 shadow-2xl">
+                <h2 class="text-xl md:text-2xl font-black text-slate-100 tracking-tight">Manual Entry Override (God Mode)</h2>
                 <p class="text-xs text-slate-500 mt-1 mb-6">Forces immediate reservation authorization. Disables standard 3-hour minimum delay rules.</p>
                 
                 <form id="god-form" class="space-y-5">
@@ -195,35 +231,38 @@
 
         <!-- Gate Pass Schedule View -->
         <section id="view-security" class="space-y-6 hidden">
-            <div class="bg-[#0f172a]/40 backdrop-blur-md p-6 rounded-2xl border border-slate-800 flex justify-between items-center shadow-lg">
+            <div class="bg-[#0f172a]/40 backdrop-blur-md p-4 md:p-6 rounded-2xl border border-slate-800 flex flex-col sm:flex-row justify-between items-start sm:items-center shadow-lg gap-4">
                 <div>
-                    <h2 class="text-xl font-bold">Gate Guard Security Sheet</h2>
+                    <h2 class="text-lg md:text-xl font-bold">Gate Guard Security Sheet</h2>
                     <p class="text-xs text-slate-500 mt-1">Verified confirmation lists generated for secure facility access validation.</p>
                 </div>
-                <button onclick="printGateSchedule()" class="bg-orange-500 hover:bg-orange-600 text-slate-950 px-5 py-2.5 rounded-lg text-xs font-bold shadow-md shadow-orange-500/15 transition duration-150">
+                <button onclick="printGateSchedule()" class="w-full sm:w-auto bg-orange-500 hover:bg-orange-600 text-slate-950 px-5 py-2.5 rounded-lg text-xs font-bold shadow-md shadow-orange-500/15 transition duration-150">
                     Generate Print List
                 </button>
             </div>
             
             <div class="bg-[#0f172a]/40 backdrop-blur-md rounded-2xl border border-slate-800 shadow-xl overflow-hidden">
-                <table class="w-full text-left">
-                    <thead class="bg-[#080B13] text-slate-400 text-xs uppercase tracking-wider border-b border-slate-800">
-                        <tr>
-                            <th class="p-4">Secure Pass #</th>
-                            <th class="p-4">Location</th>
-                            <th class="p-4">Time Block</th>
-                            <th class="p-4">Verified Ingress Guest Name</th>
-                        </tr>
-                    </thead>
-                    <tbody id="security-table-body" class="text-sm divide-y divide-slate-800/80">
-                        <!-- Filled dynamically via JS -->
-                    </tbody>
-                </table>
+                <!-- Added Horizontal Scroll for Mobile Tables -->
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left min-w-[600px]">
+                        <thead class="bg-[#080B13] text-slate-400 text-xs uppercase tracking-wider border-b border-slate-800">
+                            <tr>
+                                <th class="p-4">Secure Pass #</th>
+                                <th class="p-4">Location</th>
+                                <th class="p-4">Time Block</th>
+                                <th class="p-4">Verified Ingress Guest Name</th>
+                            </tr>
+                        </thead>
+                        <tbody id="security-table-body" class="text-sm divide-y divide-slate-800/80">
+                            <!-- Filled dynamically via JS -->
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </section>
     </main>
 
-    <!-- Invisible Printing Wrapper Frame Container (Always hidden until print action triggers) -->
+    <!-- Invisible Printing Wrapper Frame Container -->
     <div id="printable-section" class="hidden"></div>
 
     <script>
@@ -233,10 +272,46 @@
 
         document.addEventListener("DOMContentLoaded", () => {
             document.getElementById('god-form').addEventListener('submit', handleGodFormSubmit);
+            setupMobileMenu();
             refreshAdminData();
         });
 
-        // Clean Sidebar Navigation Switcher
+        // Toggle logic for mobile hamburger drawer
+        function setupMobileMenu() {
+            const toggleBtn = document.getElementById('mobile-menu-toggle');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const hamburgerIcon = document.getElementById('hamburger-icon');
+            const closeIcon = document.getElementById('close-icon');
+
+            toggleBtn.addEventListener('click', () => {
+                const isHidden = mobileMenu.classList.contains('hidden');
+                if (isHidden) {
+                    mobileMenu.classList.remove('hidden');
+                    hamburgerIcon.classList.add('hidden');
+                    closeIcon.classList.remove('hidden');
+                } else {
+                    mobileMenu.classList.add('hidden');
+                    hamburgerIcon.classList.remove('hidden');
+                    closeIcon.classList.add('hidden');
+                }
+            });
+        }
+
+        // Bridge function for mobile selections
+        function mobileSwitchView(viewName) {
+            const mobileMenu = document.getElementById('mobile-menu');
+            const hamburgerIcon = document.getElementById('hamburger-icon');
+            const closeIcon = document.getElementById('close-icon');
+
+            // Close menu drawer
+            mobileMenu.classList.add('hidden');
+            hamburgerIcon.classList.remove('hidden');
+            closeIcon.classList.add('hidden');
+
+            switchView(viewName);
+        }
+
+        // Unified Sidebar & Mobile view state management
         function switchView(viewName) {
             const views = ['dashboard', 'queue', 'godmode', 'security'];
             const titles = {
@@ -249,17 +324,28 @@
             views.forEach(v => {
                 document.getElementById(`view-${v}`).classList.add('hidden');
                 
-                // Clear active states on sidebar tabs
-                const btn = document.getElementById(`btn-${v}`);
-                btn.className = "w-full text-left py-3 px-4 rounded-lg transition duration-150 flex items-center gap-3 font-semibold text-slate-400 hover:text-orange-500 hover:bg-slate-900";
+                // Reset desktop tab styles
+                document.getElementById(`btn-${v}`).className = "w-full text-left py-3 px-4 rounded-lg transition duration-150 flex items-center gap-3 font-semibold text-slate-400 hover:text-orange-500 hover:bg-slate-900";
+                
+                // Reset mobile tab styles
+                const mBtn = document.getElementById(`m-btn-${v}`);
+                if (mBtn) {
+                    mBtn.className = "w-full text-left py-2.5 px-4 rounded-lg font-semibold text-slate-400 hover:text-orange-500 block";
+                }
             });
 
-            // Show active views and target tabs
+            // Set active panels
             document.getElementById(`view-${viewName}`).classList.remove('hidden');
             document.getElementById(`page-title`).innerText = titles[viewName];
             
-            const activeBtn = document.getElementById(`btn-${viewName}`);
-            activeBtn.className = "w-full text-left py-3 px-4 rounded-lg transition duration-150 flex items-center gap-3 font-semibold bg-orange-500/10 text-orange-500 border-l-4 border-orange-500";
+            // Set desktop tab active highlights
+            document.getElementById(`btn-${viewName}`).className = "w-full text-left py-3 px-4 rounded-lg transition duration-150 flex items-center gap-3 font-semibold bg-orange-500/10 text-orange-500 border-l-4 border-orange-500";
+            
+            // Set mobile tab active highlights
+            const mActiveBtn = document.getElementById(`m-btn-${viewName}`);
+            if (mActiveBtn) {
+                mActiveBtn.className = "w-full text-left py-2.5 px-4 rounded-lg font-semibold bg-orange-500/10 text-orange-500 block border-l-4 border-orange-500";
+            }
         }
 
         async function refreshAdminData() {
@@ -359,7 +445,7 @@
                 <div style="font-family: Arial, sans-serif; padding: 40px; color: black !important; background: white !important;">
                     <div style="text-align: center; border-bottom: 2px solid #000; padding-bottom: 15px; margin-bottom: 30px;">
                         <h1 style="font-size: 28px; font-weight: 900; margin: 0; text-transform: uppercase;">SportPlex Arena</h1>
-                        <p style="font-size: 11px; margin: 5px 0 0 0; tracking-spacing: 2px;">SECURE INGRESS RECEIPT & RETAINER SHEET</p>
+                        <p style="font-size: 11px; margin: 5px 0 0 0;">SECURE INGRESS RECEIPT & RETAINER SHEET</p>
                     </div>
                     <div style="display: flex; justify-content: space-between; margin-bottom: 30px; font-size: 13px;">
                         <div>
@@ -491,7 +577,6 @@
             const bookingsCounts = Object.values(daysMap);
             const revenues = labels.map(label => revMap[label]);
 
-            // Chart configuration values for dark mode scale colors
             const chartScalesConfig = {
                 x: {
                     grid: { color: '#1e293b' },
@@ -517,8 +602,8 @@
                     datasets: [{
                         label: 'Gross Revenue Inflow ($)',
                         data: revenues,
-                        borderColor: '#ea580c', // Bright orange
-                        backgroundColor: 'rgba(234, 88, 12, 0.12)', // Orange glow
+                        borderColor: '#ea580c',
+                        backgroundColor: 'rgba(234, 88, 12, 0.12)',
                         fill: true,
                         tension: 0.25,
                         borderWidth: 3
@@ -542,7 +627,7 @@
                     datasets: [{
                         label: 'Active Booking Counts',
                         data: bookingsCounts,
-                        backgroundColor: '#ea580c', // Solid orange
+                        backgroundColor: '#ea580c',
                         borderRadius: 6
                     }]
                 },
