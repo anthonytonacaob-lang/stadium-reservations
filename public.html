@@ -4,67 +4,75 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sports Complex Booking</title>
+    <!-- Tailwind and Google Fonts Integration -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="config.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
     <style>
-        /* Glassmorphism Panel Styling */
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #F0F3F8;
+        }
+        /* Custom UI Card shadow properties */
         .glass {
-            background: rgba(15, 23, 42, 0.4);
-            backdrop-filter: blur(8px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            background: #FFFFFF;
+            border: 1px solid #E2E8F0;
         }
 
-        /* Modern Scrollbar Styling */
+        /* Scrollbars */
         ::-webkit-scrollbar {
             width: 8px;
             height: 8px;
         }
         ::-webkit-scrollbar-track {
-            background: #0b0f19;
+            background: #F0F3F8;
         }
         ::-webkit-scrollbar-thumb {
-            background: #1e293b;
+            background: #CBD5E1;
             border-radius: 4px;
         }
         ::-webkit-scrollbar-thumb:hover {
-            background: #ea580c;
+            background: #00C2C3;
         }
     </style>
 </head>
-<body class="bg-[#0B0F19] text-slate-100 min-h-screen p-4 md:p-8 font-sans">
+<body class="text-slate-800 min-h-screen p-4 md:p-8">
 
     <div class="max-w-7xl mx-auto space-y-8">
-        <!-- Header -->
-        <header class="text-center py-6 border-b border-slate-800/80">
-            <h1 class="text-3xl md:text-4xl font-extrabold text-slate-100 tracking-tight">Arena Reservations</h1>
-            <p class="text-xs text-slate-500 mt-2 tracking-wider uppercase">Live Schedule Grid & Automated Booking System</p>
+        <!-- Header Banner Card (Midnight Navy to Deep Burgundy Gradient) -->
+        <header class="bg-gradient-to-r from-[#1E2034] to-[#451C2C] text-white p-6 md:p-8 rounded-3xl text-center shadow-lg shadow-slate-200">
+            <h1 class="text-3xl md:text-4xl font-extrabold tracking-tight">Arena Reservations</h1>
+            <p class="text-xs text-slate-300 mt-2 uppercase tracking-wider">Live Schedule Grid & Automated Booking System</p>
         </header>
 
         <!-- Main Responsive Layout Grid -->
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 md:gap-8">
             
             <!-- Left Side: Live Dynamic Availability Schedule -->
-            <div class="lg:col-span-7 glass rounded-2xl p-4 md:p-6 shadow-xl shadow-black/20">
+            <div class="lg:col-span-7 glass rounded-3xl p-4 md:p-6 shadow-xl shadow-slate-100">
                 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
                     <div>
-                        <h2 class="text-lg font-bold text-slate-100">Live Court Availability</h2>
-                        <p class="text-xs text-slate-500 mt-0.5">Updated in real-time from our system database</p>
+                        <h2 class="text-lg font-bold text-slate-800">Live Court Availability</h2>
+                        <p class="text-xs text-slate-400 mt-0.5">Updated in real-time from our system database</p>
                     </div>
-                    <input type="date" id="view-date" class="w-full sm:w-auto bg-[#080B13] border border-slate-800 rounded-lg p-2.5 text-sm text-slate-100 focus:outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500">
+                    <input type="date" id="view-date" class="w-full sm:w-auto bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-sm text-slate-800 focus:outline-none focus:border-[#00C2C3] focus:ring-1 focus:ring-[#00C2C3]">
                 </div>
 
-                <!-- Horizontal Scroll Handler for Narrow Screen Layouts -->
+                <!-- Horizontal Scroll Handler -->
                 <div class="overflow-x-auto">
                     <table class="w-full text-left border-collapse min-w-[450px]">
                         <thead>
-                            <tr class="border-b border-slate-800 text-xs font-bold text-slate-400 uppercase tracking-wider">
+                            <tr class="border-b border-slate-100 text-xs font-bold text-slate-400 uppercase tracking-wider">
                                 <th class="py-3">Time Slot</th>
                                 <th class="py-3 text-center">Court 1</th>
                                 <th class="py-3 text-center">Court 2</th>
                                 <th class="py-3 text-center">Court 3</th>
                             </tr>
                         </thead>
-                        <tbody id="availability-grid" class="text-sm divide-y divide-slate-800/50">
+                        <tbody id="availability-grid" class="text-sm divide-y divide-slate-100">
                             <!-- Populated Dynamically via JavaScript -->
                         </tbody>
                     </table>
@@ -75,49 +83,49 @@
             <div class="lg:col-span-5 space-y-6">
                 
                 <!-- Rates Display Matrix -->
-                <div class="glass rounded-2xl p-4 md:p-6 shadow-xl border border-slate-800/50">
-                    <h3 class="font-bold text-slate-300 text-xs tracking-wider uppercase mb-3">Facility Rate Sheet</h3>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs text-slate-400">
-                        <div class="flex justify-between sm:block">
+                <div class="glass rounded-3xl p-4 md:p-6 shadow-xl shadow-slate-100">
+                    <h3 class="font-extrabold text-slate-700 text-xs tracking-wider uppercase mb-3">Facility Rate Sheet</h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs text-slate-500">
+                        <div class="flex justify-between sm:block border-b border-slate-50 pb-2 sm:pb-0 sm:border-0">
                             <span>🏀 Day Rate (6AM - 5PM):</span> 
-                            <b class="text-orange-500 block sm:mt-0.5">$15.00 / hr</b>
+                            <b class="text-[#00C2C3] block sm:mt-0.5">$15.00 / hr</b>
                         </div>
-                        <div class="flex justify-between sm:block">
+                        <div class="flex justify-between sm:block border-b border-slate-50 pb-2 sm:pb-0 sm:border-0">
                             <span>🌙 Night Rate (5PM - 10PM):</span> 
-                            <b class="text-orange-500 block sm:mt-0.5">$25.00 / hr</b>
+                            <b class="text-[#00C2C3] block sm:mt-0.5">$25.00 / hr</b>
                         </div>
-                        <div class="flex justify-between sm:block">
+                        <div class="flex justify-between sm:block border-b border-slate-50 pb-2 sm:pb-0 sm:border-0">
                             <span>📦 Package A (Whole Gym):</span> 
-                            <b class="text-orange-500 block sm:mt-0.5">$80.00 / hr</b>
+                            <b class="text-[#00C2C3] block sm:mt-0.5">$80.00 / hr</b>
                         </div>
-                        <div class="flex justify-between sm:block">
+                        <div class="flex justify-between sm:block pb-2 sm:pb-0">
                             <span>📦 Package B (Court 1 Only):</span> 
-                            <b class="text-orange-500 block sm:mt-0.5">$20.00 / hr</b>
+                            <b class="text-[#00C2C3] block sm:mt-0.5">$20.00 / hr</b>
                         </div>
                     </div>
                 </div>
 
                 <!-- Form Card -->
-                <div class="glass rounded-2xl p-4 md:p-6 shadow-xl relative overflow-hidden">
-                    <div id="countdown-banner" class="hidden bg-orange-500 text-slate-950 font-bold p-2 text-center text-xs absolute top-0 left-0 right-0 tracking-wider">
+                <div class="glass rounded-3xl p-4 md:p-6 shadow-xl relative overflow-hidden shadow-slate-100">
+                    <div id="countdown-banner" class="hidden bg-[#FFA570] text-slate-950 font-bold p-2 text-center text-xs absolute top-0 left-0 right-0 tracking-wider">
                         Holding booking space! Submit within: <span id="timer" class="font-mono">20:00</span>
                     </div>
 
                     <form id="booking-form" class="space-y-4 mt-2">
                         <div>
-                            <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400">Full Name</label>
-                            <input type="text" id="form-name" required class="w-full mt-1.5 bg-[#080B13] border border-slate-800 rounded-lg p-2.5 text-sm text-slate-100 focus:outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500">
+                            <label class="block text-xs font-semibold uppercase tracking-wider text-slate-500">Full Name</label>
+                            <input type="text" id="form-name" required class="w-full mt-1.5 bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-sm text-slate-800 focus:outline-none focus:border-[#00C2C3] focus:ring-1 focus:ring-[#00C2C3]">
                         </div>
 
                         <div>
-                            <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400">Email Address</label>
-                            <input type="email" id="form-email" required class="w-full mt-1.5 bg-[#080B13] border border-slate-800 rounded-lg p-2.5 text-sm text-slate-100 focus:outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500">
+                            <label class="block text-xs font-semibold uppercase tracking-wider text-slate-500">Email Address</label>
+                            <input type="email" id="form-email" required class="w-full mt-1.5 bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-sm text-slate-800 focus:outline-none focus:border-[#00C2C3] focus:ring-1 focus:ring-[#00C2C3]">
                         </div>
 
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div>
-                                <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400">Sport / Package</label>
-                                <select id="form-sport" class="w-full mt-1.5 bg-[#080B13] border border-slate-800 rounded-lg p-2.5 text-sm text-slate-100 focus:outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500">
+                                <label class="block text-xs font-semibold uppercase tracking-wider text-slate-500">Sport / Package</label>
+                                <select id="form-sport" class="w-full mt-1.5 bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-sm text-slate-800 focus:outline-none focus:border-[#00C2C3] focus:ring-1 focus:ring-[#00C2C3]">
                                     <option value="Basketball">Basketball</option>
                                     <option value="Volleyball">Volleyball</option>
                                     <option value="Badminton">Badminton</option>
@@ -128,8 +136,8 @@
                                 </select>
                             </div>
                             <div>
-                                <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400">Court Selection</label>
-                                <select id="form-court" class="w-full mt-1.5 bg-[#080B13] border border-slate-800 rounded-lg p-2.5 text-sm text-slate-100 focus:outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500">
+                                <label class="block text-xs font-semibold uppercase tracking-wider text-slate-500">Court Selection</label>
+                                <select id="form-court" class="w-full mt-1.5 bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-sm text-slate-800 focus:outline-none focus:border-[#00C2C3] focus:ring-1 focus:ring-[#00C2C3]">
                                     <option value="Court 1">Court 1</option>
                                     <option value="Court 2">Court 2</option>
                                     <option value="Court 3">Court 3</option>
@@ -138,28 +146,28 @@
                             </div>
                         </div>
 
-                        <!-- Stacked on mobile screens, splits into 3 columns on desktops to prevent squishing [2] -->
+                        <!-- Stacked on mobile screens, splits into 3 columns on desktops -->
                         <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
                             <div>
-                                <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400">Date</label>
-                                <input type="date" id="form-date" required class="w-full mt-1.5 bg-[#080B13] border border-slate-800 rounded-lg p-2.5 text-sm text-slate-100 focus:outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500">
+                                <label class="block text-xs font-semibold uppercase tracking-wider text-slate-500">Date</label>
+                                <input type="date" id="form-date" required class="w-full mt-1.5 bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-sm text-slate-800 focus:outline-none focus:border-[#00C2C3] focus:ring-1 focus:ring-[#00C2C3]">
                             </div>
                             <div>
-                                <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400">Start Time</label>
-                                <select id="form-start" class="w-full mt-1.5 bg-[#080B13] border border-slate-800 rounded-lg p-2.5 text-sm text-slate-100 focus:outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500"></select>
+                                <label class="block text-xs font-semibold uppercase tracking-wider text-slate-500">Start Time</label>
+                                <select id="form-start" class="w-full mt-1.5 bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-sm text-slate-800 focus:outline-none focus:border-[#00C2C3] focus:ring-1 focus:ring-[#00C2C3]"></select>
                             </div>
                             <div>
-                                <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400">End Time</label>
-                                <select id="form-end" class="w-full mt-1.5 bg-[#080B13] border border-slate-800 rounded-lg p-2.5 text-sm text-slate-100 focus:outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500"></select>
+                                <label class="block text-xs font-semibold uppercase tracking-wider text-slate-500">End Time</label>
+                                <select id="form-end" class="w-full mt-1.5 bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-sm text-slate-800 focus:outline-none focus:border-[#00C2C3] focus:ring-1 focus:ring-[#00C2C3]"></select>
                             </div>
                         </div>
 
-                        <div class="bg-[#080B13] border border-slate-800/80 rounded-xl p-4 flex justify-between items-center shadow-inner">
-                            <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Calculated Cost:</span>
-                            <span id="price-display" class="text-2xl font-black text-orange-500">$0.00</span>
+                        <div class="bg-slate-50 border border-slate-100 rounded-2xl p-4 flex justify-between items-center shadow-inner">
+                            <span class="text-xs font-bold uppercase tracking-wider text-slate-500">Calculated Cost:</span>
+                            <span id="price-display" class="text-2xl font-black text-[#00C2C3]">$0.00</span>
                         </div>
 
-                        <button type="submit" class="w-full bg-orange-500 hover:bg-orange-600 text-slate-950 font-bold py-3.5 rounded-lg shadow-lg shadow-orange-500/10 transition duration-150">
+                        <button type="submit" class="w-full bg-[#00C2C3] hover:bg-[#00B0B1] text-white font-bold py-3.5 rounded-xl shadow-lg shadow-[#00C2C3]/10 transition duration-150">
                             Lock Booking Space
                         </button>
                     </form>
@@ -169,11 +177,11 @@
     </div>
 
     <!-- Modified Glass Alert Modal Overlay -->
-    <div id="alert-modal" class="hidden fixed inset-0 bg-black/60 flex items-center justify-center p-4 z-50">
-        <div class="glass max-w-md w-full rounded-2xl p-6 shadow-2xl text-center space-y-4 border border-slate-800">
-            <h3 id="modal-title" class="text-lg font-black text-slate-100 tracking-tight"></h3>
-            <p id="modal-message" class="text-slate-400 text-sm leading-relaxed"></p>
-            <button id="modal-close" class="bg-orange-500 text-slate-950 font-bold px-6 py-2.5 rounded-lg hover:bg-orange-600 transition text-sm">Dismiss</button>
+    <div id="alert-modal" class="hidden fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+        <div class="bg-white max-w-md w-full rounded-3xl p-6 shadow-2xl text-center space-y-4 border border-slate-100">
+            <h3 id="modal-title" class="text-lg font-black text-slate-800 tracking-tight"></h3>
+            <p id="modal-message" class="text-slate-500 text-sm leading-relaxed"></p>
+            <button id="modal-close" class="bg-[#00C2C3] text-white font-bold px-6 py-2.5 rounded-xl hover:bg-[#00B0B1] transition text-sm">Dismiss</button>
         </div>
     </div>
 
@@ -273,7 +281,7 @@
                     let c2 = getStatus(dateVal, time, 'Court 2');
                     let c3 = getStatus(dateVal, time, 'Court 3');
                     gridBody.innerHTML += `
-                        <tr class="border-b border-slate-800/40 hover:bg-slate-900/10">
+                        <tr class="border-b border-slate-100 hover:bg-slate-50/50">
                             <td class="py-2.5 font-semibold text-slate-400">${time}</td>
                             <td class="p-1">${renderStatusBadge(c1)}</td>
                             <td class="p-1">${renderStatusBadge(c2)}</td>
@@ -305,14 +313,14 @@
             return h + (m/60);
         }
 
-        // Updated status badges to fit the modern dark orange/blue look
+        // Updated Status Badges matching the BidiBet Style Colors
         function renderStatusBadge(status) {
             if (status === 'CONFIRMED') {
-                return `<div class="bg-red-500/10 border border-red-500/20 text-red-400 rounded text-center text-[10px] py-1 font-bold tracking-wider uppercase">TAKEN</div>`;
+                return `<div class="bg-red-50 text-red-500 rounded-lg text-center text-[10px] py-1.5 font-extrabold tracking-wider uppercase">TAKEN</div>`;
             } else if (status === 'PENDING') {
-                return `<div class="bg-yellow-500/10 border border-yellow-500/20 text-yellow-400 rounded text-center text-[10px] py-1 font-bold tracking-wider uppercase">RESERVED</div>`;
+                return `<div class="bg-orange-50 text-orange-400 rounded-lg text-center text-[10px] py-1.5 font-extrabold tracking-wider uppercase">RESERVED</div>`;
             }
-            return `<div class="bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 rounded text-center text-[10px] py-1 font-bold tracking-wider uppercase">OPEN</div>`;
+            return `<div class="bg-teal-50 text-[#00C2C3] rounded-lg text-center text-[10px] py-1.5 font-extrabold tracking-wider uppercase">OPEN</div>`;
         }
 
         function calculateLivePrice() {
