@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sports Complex Booking</title>
-    <!-- Tailwind and Google Fonts Integration -->
+    <!-- Tailwind CSS and Plus Jakarta Font -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="config.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -164,7 +164,7 @@
 
                         <div class="bg-slate-50 border border-slate-100 rounded-2xl p-4 flex justify-between items-center shadow-inner">
                             <span class="text-xs font-bold uppercase tracking-wider text-slate-500">Calculated Cost:</span>
-                            <span id="price-display" class="text-2xl font-black text-[#00C2C3]">$0.00</span>
+                            <span id="price-display" class="text-2xl font-black text-[#00C2C3]">PHP 0.00</span>
                         </div>
 
                         <button type="submit" class="w-full bg-[#00C2C3] hover:bg-[#00B0B1] text-white font-bold py-3.5 rounded-xl shadow-lg shadow-[#00C2C3]/10 transition duration-150">
@@ -188,6 +188,17 @@
     <script>
         let allBookings = [];
         let timerInterval = null;
+
+        // PHP Synchronized Rates (Hourly Splits)
+        const RATES = {
+            "Basketball": { day: 450.00, night: 550.00 },
+            "Volleyball": { day: 450.00, night: 550.00 },
+            "Badminton": { day: 450.00, night: 550.00 },
+            "Pickleball": { day: 450.00, night: 550.00 },
+            "Package A": { day: 1500.00, night: 2500.00 },
+            "Package B": { day: 600.00, night: 700.00 },
+            "Package C": { day: 550.00, night: 650.00 }
+        };
 
         document.addEventListener("DOMContentLoaded", () => {
             const todayStr = new Date().toISOString().split('T')[0];
@@ -216,16 +227,23 @@
             for (let hour = 6; hour <= 22; hour++) {
                 let hourStr = hour < 10 ? '0' + hour : hour;
                 if (hour !== 22) {
-                    startSelect.innerHTML += `<option value="${hourStr}:00">${hourStr}:00</option>`;
+                    startSelect.innerHTML += `<option value="${hourStr}:00">${formatTimeLabel(hour)}</option>`;
                 }
                 if (hour !== 6) {
-                    endSelect.innerHTML += `<option value="${hourStr}:00">${hourStr}:00</option>`;
+                    endSelect.innerHTML += `<option value="${hourStr}:00">${formatTimeLabel(hour)}</option>`;
                 }
                 if (hour !== 22) {
-                    startSelect.innerHTML += `<option value="${hourStr}:30">${hourStr}:30</option>`;
-                    endSelect.innerHTML += `<option value="${hourStr}:30">${hourStr}:30</option>`;
+                    startSelect.innerHTML += `<option value="${hourStr}:30">${hourStr.toString()}:30 ${hour >= 12 ? 'PM':'AM'}</option>`;
+                    endSelect.innerHTML += `<option value="${hourStr}:30">${hourStr.toString()}:30 ${hour >= 12 ? 'PM':'AM'}</option>`;
                 }
             }
+        }
+
+        function formatTimeLabel(hour) {
+            const ampm = hour >= 12 ? 'PM' : 'AM';
+            let displayHour = hour % 12;
+            displayHour = displayHour === 0 ? 12 : displayHour;
+            return `${displayHour}:00 ${ampm}`;
         }
 
         function handleSmartFormRules() {
@@ -313,7 +331,6 @@
             return h + (m/60);
         }
 
-        // Updated Status Badges matching the BidiBet Style Colors
         function renderStatusBadge(status) {
             if (status === 'CONFIRMED') {
                 return `<div class="bg-red-50 text-red-500 rounded-lg text-center text-[10px] py-1.5 font-extrabold tracking-wider uppercase">TAKEN</div>`;
@@ -323,6 +340,7 @@
             return `<div class="bg-teal-50 text-[#00C2C3] rounded-lg text-center text-[10px] py-1.5 font-extrabold tracking-wider uppercase">OPEN</div>`;
         }
 
+        // Customer Live Pricing Calculation based on day/night hourly slots
         function calculateLivePrice() {
             const sport = document.getElementById('form-sport').value;
             const startVal = document.getElementById('form-start').value;
@@ -331,25 +349,24 @@
             const end = parseTime(endVal);
 
             if (start >= end) {
-                document.getElementById('price-display').innerText = '$0.00';
+                document.getElementById('price-display').innerText = 'PHP 0.00';
                 return;
             }
 
+            const rateConfig = RATES[sport] || { day: 450.00, night: 550.00 };
             let price = 0;
-            let flatRate = null;
-            if (sport === "Package A") flatRate = 80;
-            else if (sport === "Package B") flatRate = 20;
-            else if (sport === "Package C") flatRate = 18;
 
-            if (flatRate !== null) {
-                price = (end - start) * flatRate;
-            } else {
-                for (let h = start; h < end; h += 0.5) {
-                    if (h >= 6 && h < 17) price += 0.5 * 15;
-                    else price += 0.5 * 25;
+            // Process selected customer timeslot span in 30-minute blocks
+            for (let h = start; h < end; h += 0.5) {
+                if (h >= 6 && h < 17) {
+                    price += 0.5 * rateConfig.day; // Day Rate Block
+                } else if (h >= 17 && h < 22) {
+                    price += 0.5 * rateConfig.night; // Night Rate Block
                 }
             }
-            document.getElementById('price-display').innerText = `$${price.toFixed(2)}`;
+            
+            // Format output to PHP
+            document.getElementById('price-display').innerText = `PHP ${price.toFixed(2)}`;
         }
 
         async function handleFormSubmit(e) {
