@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Enterprise Security Admin Console</title>
-    <!-- Tailwind and Google Fonts Integration -->
+    <title>SKILLS Admin Console</title>
+    <!-- Tailwind CSS and Chart.js CDNs -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="config.js"></script>
@@ -33,7 +33,7 @@
             background: #00C2C3;
         }
 
-        /* Specific Printer Styling (forces clean black and white print sheets) */
+        /* Printer Overrides */
         @media print {
             body { background: white !important; color: black !important; }
             body * { visibility: hidden; }
@@ -51,11 +51,11 @@
 </head>
 <body class="text-slate-800 flex flex-col md:flex-row min-h-screen">
 
-    <!-- Mobile Top Navigation Bar (Hidden on Desktop) -->
-    <div class="md:hidden bg-white border-b border-slate-100 p-4 flex justify-between items-center sticky top-0 z-50 shadow-sm shadow-slate-100">
+    <!-- Mobile Top Navigation Bar -->
+    <div class="md:hidden bg-white border-b border-slate-100 p-4 flex justify-between items-center sticky top-0 z-50 shadow-sm">
         <div class="flex items-center gap-2">
             <div class="w-6 h-6 rounded bg-[#00C2C3] flex items-center justify-center font-black text-white text-xs">S</div>
-            <span class="text-sm font-bold text-slate-800 tracking-tight">Stadium Admin</span>
+            <span class="text-sm font-bold text-slate-800 tracking-tight">SKILLS Admin</span>
         </div>
         <button id="mobile-menu-toggle" class="text-[#00C2C3] focus:outline-none p-2" aria-label="Toggle Navigation Menu">
             <svg id="hamburger-icon" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -70,16 +70,22 @@
     <!-- Mobile Dropdown Menu -->
     <div id="mobile-menu" class="md:hidden hidden bg-white border-b border-slate-100 p-4 space-y-1.5 sticky top-[57px] z-40 transition-all duration-200">
         <button id="m-btn-dashboard" onclick="mobileSwitchView('dashboard')" class="w-full text-left py-2.5 px-4 rounded-lg font-semibold bg-[#00C2C3]/10 text-[#00C2C3] block border-l-4 border-[#00C2C3]">
-            📊 Telemetry Dashboard
-        </button>
-        <button id="m-btn-queue" onclick="mobileSwitchView('queue')" class="w-full text-left py-2.5 px-4 rounded-lg font-semibold text-slate-500 hover:text-[#00C2C3] block">
-            📋 Request Queue
-        </button>
-        <button id="m-btn-godmode" onclick="mobileSwitchView('godmode')" class="w-full text-left py-2.5 px-4 rounded-lg font-semibold text-slate-500 hover:text-[#00C2C3] block">
-            ⚡ Walk-In Override
+            📊 Dashboard
         </button>
         <button id="m-btn-security" onclick="mobileSwitchView('security')" class="w-full text-left py-2.5 px-4 rounded-lg font-semibold text-slate-500 hover:text-[#00C2C3] block">
             🛡️ Gate Schedule
+        </button>
+        <button id="m-btn-godmode" onclick="mobileSwitchView('godmode')" class="w-full text-left py-2.5 px-4 rounded-lg font-semibold text-slate-500 hover:text-[#00C2C3] block">
+            ⚡ Data Entry
+        </button>
+        <button id="m-btn-queue" onclick="mobileSwitchView('queue')" class="w-full text-left py-2.5 px-4 rounded-lg font-semibold text-slate-500 hover:text-[#00C2C3] block">
+            📋 Pending Approvals
+        </button>
+        <button id="m-btn-database" onclick="mobileSwitchView('database')" class="w-full text-left py-2.5 px-4 rounded-lg font-semibold text-slate-500 hover:text-[#00C2C3] block">
+            📂 Master Database
+        </button>
+        <button id="m-btn-analytics" onclick="mobileSwitchView('analytics')" class="w-full text-left py-2.5 px-4 rounded-lg font-semibold text-slate-500 hover:text-[#00C2C3] block">
+            📈 Analytics & Reports
         </button>
     </div>
 
@@ -89,38 +95,44 @@
             <div class="flex items-center gap-3 border-b border-slate-100 pb-5">
                 <div class="w-8 h-8 rounded-lg bg-[#00C2C3] flex items-center justify-center font-black text-white">S</div>
                 <div>
-                    <h2 class="text-base font-bold text-slate-800 leading-tight">Stadium Admin</h2>
+                    <h2 class="text-base font-bold text-slate-800 leading-tight">SKILLS Admin</h2>
                     <span class="text-[10px] text-[#00C2C3] font-bold uppercase tracking-widest">Control Room</span>
                 </div>
             </div>
             
-            <nav class="space-y-1 text-sm">
+            <nav class="space-y-1.5 text-sm">
                 <button id="btn-dashboard" onclick="switchView('dashboard')" class="w-full text-left py-3 px-4 rounded-lg transition duration-150 flex items-center gap-3 font-semibold bg-[#00C2C3]/10 text-[#00C2C3] border-l-4 border-[#00C2C3]">
-                    <span>📊</span> Telemetry Dashboard
-                </button>
-                <button id="btn-queue" onclick="switchView('queue')" class="w-full text-left py-3 px-4 rounded-lg transition duration-150 flex items-center gap-3 font-semibold text-slate-500 hover:text-[#00C2C3] hover:bg-slate-50">
-                    <span>📋</span> Request Queue
-                </button>
-                <button id="btn-godmode" onclick="switchView('godmode')" class="w-full text-left py-3 px-4 rounded-lg transition duration-150 flex items-center gap-3 font-semibold text-slate-500 hover:text-[#00C2C3] hover:bg-slate-50">
-                    <span>⚡</span> Walk-In Override
+                    <span>📊</span> Dashboard
                 </button>
                 <button id="btn-security" onclick="switchView('security')" class="w-full text-left py-3 px-4 rounded-lg transition duration-150 flex items-center gap-3 font-semibold text-slate-500 hover:text-[#00C2C3] hover:bg-slate-50">
                     <span>🛡️</span> Gate Schedule
                 </button>
+                <button id="btn-godmode" onclick="switchView('godmode')" class="w-full text-left py-3 px-4 rounded-lg transition duration-150 flex items-center gap-3 font-semibold text-slate-500 hover:text-[#00C2C3] hover:bg-slate-50">
+                    <span>⚡</span> Data Entry
+                </button>
+                <button id="btn-queue" onclick="switchView('queue')" class="w-full text-left py-3 px-4 rounded-lg transition duration-150 flex items-center gap-3 font-semibold text-slate-500 hover:text-[#00C2C3] hover:bg-slate-50">
+                    <span>📋</span> Pending Approvals
+                </button>
+                <button id="btn-database" onclick="switchView('database')" class="w-full text-left py-3 px-4 rounded-lg transition duration-150 flex items-center gap-3 font-semibold text-slate-500 hover:text-[#00C2C3] hover:bg-slate-50">
+                    <span>📂</span> Master Database
+                </button>
+                <button id="btn-analytics" onclick="switchView('analytics')" class="w-full text-left py-3 px-4 rounded-lg transition duration-150 flex items-center gap-3 font-semibold text-slate-500 hover:text-[#00C2C3] hover:bg-slate-50">
+                    <span>📈</span> Analytics & Reports
+                </button>
             </nav>
         </div>
         <div class="text-[10px] text-slate-400 font-mono">
-            System Version v2.3<br>Theme: Plus Jakarta Light
+            System Version v2.4<br>Theme: Skills JAKARTA Light
         </div>
     </aside>
 
     <!-- Main Workspace -->
     <main class="flex-1 p-4 md:p-8 space-y-6 md:space-y-8 overflow-y-auto">
         
-        <!-- Header Banner Card (Midnight Navy to Deep Burgundy Gradient) -->
+        <!-- Header Banner Card -->
         <header class="bg-gradient-to-r from-[#1E2034] to-[#451C2C] text-white p-6 md:p-8 rounded-3xl flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 shadow-lg shadow-slate-200">
             <div>
-                <h1 id="page-title" class="text-2xl md:text-3xl font-extrabold tracking-tight">System Metrics & Utilization</h1>
+                <h1 id="page-title" class="text-2xl md:text-3xl font-extrabold tracking-tight">SKILLS Admin Dashboard</h1>
                 <p class="text-xs text-slate-300 mt-1">Live tracking database and operational controls</p>
             </div>
             <div class="flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/10 px-4 py-2 rounded-xl text-xs font-mono">
@@ -129,27 +141,102 @@
             </div>
         </header>
 
-        <!-- Dashboard View -->
-        <section id="view-dashboard" class="space-y-6">
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <!-- Line Chart Card -->
-                <div class="bg-white p-4 md:p-6 rounded-3xl border border-slate-100 shadow-xl shadow-slate-100">
-                    <h3 class="font-extrabold text-slate-700 text-xs md:text-sm tracking-wider uppercase mb-4">Total Revenue Over Days ($)</h3>
-                    <div class="h-64 flex items-center justify-center">
-                        <canvas id="revenueChart"></canvas>
+        <!-- Dashboard View (Packages and Live Schedule Calendar Grid) -->
+        <section id="view-dashboard" class="space-y-8">
+            <!-- 4 Package Configuration Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+                <!-- Card 1: Regular Games -->
+                <div class="bg-white p-6 rounded-2xl shadow-sm border-t-4 border-blue-500 flex flex-col justify-between">
+                    <div>
+                        <h3 class="text-base font-bold text-slate-800">Regular Games</h3>
+                        <p class="text-xs text-slate-400 mt-1 leading-relaxed">Basketball, Volleyball, Badminton, Pickleball</p>
+                        <div class="my-4 space-y-0.5">
+                            <p class="text-base font-extrabold text-slate-800">PHP 450<span class="text-xs font-normal text-slate-400">/hr (Day)</span></p>
+                            <p class="text-base font-extrabold text-slate-800">PHP 550<span class="text-xs font-normal text-slate-400">/hr (Night)</span></p>
+                        </div>
                     </div>
+                    <ul class="text-[11px] text-slate-400 list-disc list-inside mt-2 border-t border-slate-50 pt-3 space-y-1">
+                        <li>Regular Game</li>
+                        <li>Max 20 pax</li>
+                    </ul>
                 </div>
-                <!-- Bar Chart Card -->
-                <div class="bg-white p-4 md:p-6 rounded-3xl border border-slate-100 shadow-xl shadow-slate-100">
-                    <h3 class="font-extrabold text-slate-700 text-xs md:text-sm tracking-wider uppercase mb-4">Busiest Days (Count)</h3>
-                    <div class="h-64 flex items-center justify-center">
-                        <canvas id="busiestChart"></canvas>
+
+                <!-- Card 2: Package A -->
+                <div class="bg-white p-6 rounded-2xl shadow-sm border-t-4 border-purple-500 flex flex-col justify-between">
+                    <div>
+                        <h3 class="text-base font-bold text-slate-800">Package A</h3>
+                        <p class="text-xs text-slate-400 mt-1 leading-relaxed">Exclusive Full Facility Rental</p>
+                        <div class="my-4 space-y-0.5">
+                            <p class="text-base font-extrabold text-slate-800">PHP 1,500<span class="text-xs font-normal text-slate-400">/hr (Day)</span></p>
+                            <p class="text-base font-extrabold text-slate-800">PHP 2,500<span class="text-xs font-normal text-slate-400">/hr (Night)</span></p>
+                        </div>
                     </div>
+                    <ul class="text-[11px] text-slate-400 list-disc list-inside mt-2 border-t border-slate-50 pt-3 space-y-1">
+                        <li>Whole Gym (3 Courts)</li>
+                        <li>Bleachers, Fan, Lights</li>
+                    </ul>
+                </div>
+
+                <!-- Card 3: Package B -->
+                <div class="bg-white p-6 rounded-2xl shadow-sm border-t-4 border-teal-500 flex flex-col justify-between">
+                    <div>
+                        <h3 class="text-base font-bold text-slate-800">Package B</h3>
+                        <p class="text-xs text-slate-400 mt-1 leading-relaxed">Court 1 + Bleachers Access</p>
+                        <div class="my-4 space-y-0.5">
+                            <p class="text-base font-extrabold text-slate-800">PHP 600<span class="text-xs font-normal text-slate-400">/hr (Day)</span></p>
+                            <p class="text-base font-extrabold text-slate-800">PHP 700<span class="text-xs font-normal text-slate-400">/hr (Night)</span></p>
+                        </div>
+                    </div>
+                    <ul class="text-[11px] text-slate-400 list-disc list-inside mt-2 border-t border-slate-50 pt-3 space-y-1">
+                        <li>Exclusive Bleachers</li>
+                        <li>Fan, Lights | Max 80 pax</li>
+                    </ul>
+                </div>
+
+                <!-- Card 4: Package C -->
+                <div class="bg-white p-6 rounded-2xl shadow-sm border-t-4 border-rose-500 flex flex-col justify-between">
+                    <div>
+                        <h3 class="text-base font-bold text-slate-800">Package C</h3>
+                        <p class="text-xs text-slate-400 mt-1 leading-relaxed">Standard Court + Extra Pax</p>
+                        <div class="my-4 space-y-0.5">
+                            <p class="text-base font-extrabold text-slate-800">PHP 550<span class="text-xs font-normal text-slate-400">/hr (Day)</span></p>
+                            <p class="text-base font-extrabold text-slate-800">PHP 650<span class="text-xs font-normal text-slate-400">/hr (Night)</span></p>
+                        </div>
+                    </div>
+                    <ul class="text-[11px] text-slate-400 list-disc list-inside mt-2 border-t border-slate-50 pt-3 space-y-1">
+                        <li>Fan, Lights</li>
+                        <li>Max 50 pax</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Date Select Input Panel -->
+            <div class="max-w-xs bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex flex-col gap-1.5">
+                <label class="text-[10px] font-extrabold text-slate-400 uppercase tracking-widest">Select Date</label>
+                <input type="date" id="calendar-view-date" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-sm text-slate-800 focus:outline-none focus:border-[#00C2C3] focus:ring-1 focus:ring-[#00C2C3]">
+            </div>
+
+            <!-- Hourly Interactive Court Grid (Calendar) -->
+            <div class="bg-white rounded-3xl p-6 shadow-sm border border-slate-100 overflow-hidden max-w-5xl">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse min-w-[650px]">
+                        <thead>
+                            <tr class="text-xs font-bold text-slate-400 uppercase tracking-wider text-center">
+                                <th class="py-3 text-left w-1/4"></th>
+                                <th class="py-3 w-1/4">Court 1</th>
+                                <th class="py-3 w-1/4">Court 2</th>
+                                <th class="py-3 w-1/4">Court 3</th>
+                            </tr>
+                        </thead>
+                        <tbody id="dashboard-calendar-grid" class="text-sm divide-y divide-slate-100">
+                            <!-- Populated hourly via JS -->
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </section>
 
-        <!-- Request Queue View -->
+        <!-- Request Queue (Pending Approvals) View -->
         <section id="view-queue" class="space-y-6 hidden">
             <div class="bg-white rounded-3xl border border-slate-100 shadow-xl shadow-slate-100 overflow-hidden">
                 <div class="px-6 py-4 border-b border-slate-100 bg-slate-50/50">
@@ -174,10 +261,10 @@
             </div>
         </section>
 
-        <!-- Walk-In override (God Mode) View -->
+        <!-- Walk-In override (Data Entry) View -->
         <section id="view-godmode" class="space-y-6 hidden">
             <div class="max-w-2xl mx-auto bg-white p-4 md:p-8 rounded-3xl border border-slate-100 shadow-2xl">
-                <h2 class="text-xl md:text-2xl font-extrabold text-slate-800 tracking-tight">Manual Entry Override (God Mode)</h2>
+                <h2 class="text-xl md:text-2xl font-extrabold text-slate-800 tracking-tight">Manual Entry Override (Data Entry)</h2>
                 <p class="text-xs text-slate-400 mt-1 mb-6">Immediate reservation authorization bypass tools.</p>
                 
                 <form id="god-form" class="space-y-5">
@@ -265,6 +352,54 @@
                 </div>
             </div>
         </section>
+
+        <!-- Master Database View -->
+        <section id="view-database" class="space-y-6 hidden">
+            <div class="bg-white rounded-3xl border border-slate-100 shadow-xl overflow-hidden">
+                <div class="px-6 py-4 border-b border-slate-100 bg-slate-50/50 flex justify-between items-center">
+                    <h3 class="font-extrabold text-slate-700 uppercase tracking-wider text-sm">Historical Master Database</h3>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse min-w-[1000px]">
+                        <thead class="bg-slate-50/50 text-slate-400 text-xs uppercase tracking-wider border-b border-slate-100">
+                            <tr>
+                                <th class="p-4">ID</th>
+                                <th class="p-4">Client</th>
+                                <th class="p-4">Sport</th>
+                                <th class="p-4">Court</th>
+                                <th class="p-4">Date</th>
+                                <th class="p-4">Time Block</th>
+                                <th class="p-4">Total Cost</th>
+                                <th class="p-4 text-right">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="database-table-body" class="divide-y divide-slate-100 text-sm">
+                            <!-- Filled dynamically via JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Analytics and Reports View -->
+        <section id="view-analytics" class="space-y-6 hidden">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Line Chart Card -->
+                <div class="bg-white p-4 md:p-6 rounded-3xl border border-slate-100 shadow-xl shadow-slate-100">
+                    <h3 class="font-extrabold text-slate-700 text-xs md:text-sm tracking-wider uppercase mb-4">Total Revenue Over Days ($)</h3>
+                    <div class="h-64 flex items-center justify-center">
+                        <canvas id="revenueChart"></canvas>
+                    </div>
+                </div>
+                <!-- Bar Chart Card -->
+                <div class="bg-white p-4 md:p-6 rounded-3xl border border-slate-100 shadow-xl shadow-slate-100">
+                    <h3 class="font-extrabold text-slate-700 text-xs md:text-sm tracking-wider uppercase mb-4">Busiest Days (Count)</h3>
+                    <div class="h-64 flex items-center justify-center">
+                        <canvas id="busiestChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
     </main>
 
     <!-- Invisible Printing Wrapper Frame Container -->
@@ -278,6 +413,12 @@
         document.addEventListener("DOMContentLoaded", () => {
             document.getElementById('god-form').addEventListener('submit', handleGodFormSubmit);
             setupMobileMenu();
+            
+            // Set Default Date
+            const todayStr = new Date().toISOString().split('T')[0];
+            document.getElementById('calendar-view-date').value = todayStr;
+            document.getElementById('calendar-view-date').addEventListener('change', renderDashboardCalendar);
+
             refreshAdminData();
         });
 
@@ -313,29 +454,37 @@
             switchView(viewName);
         }
 
+        // Expanded view panel controller
         function switchView(viewName) {
-            const views = ['dashboard', 'queue', 'godmode', 'security'];
+            const views = ['dashboard', 'security', 'godmode', 'queue', 'database', 'analytics'];
             const titles = {
-                dashboard: 'System Metrics & Utilization',
-                queue: 'Verification Pipeline Queue',
-                godmode: 'Manual Override System',
-                security: 'Security Clearance'
+                dashboard: 'SKILLS Admin Dashboard',
+                security: 'Security Clearance (Gate Schedule)',
+                godmode: 'Manual Override System (Data Entry)',
+                queue: 'Verification Pipeline Queue (Pending Approvals)',
+                database: 'Master Database Records',
+                analytics: 'Telemetry Analytics & Reports'
             };
 
             views.forEach(v => {
-                document.getElementById(`view-${v}`).classList.add('hidden');
-                document.getElementById(`btn-${v}`).className = "w-full text-left py-3 px-4 rounded-lg transition duration-150 flex items-center gap-3 font-semibold text-slate-500 hover:text-[#00C2C3] hover:bg-slate-50";
+                const el = document.getElementById(`view-${v}`);
+                if (el) el.classList.add('hidden');
+                
+                const btn = document.getElementById(`btn-${v}`);
+                if (btn) btn.className = "w-full text-left py-3 px-4 rounded-lg transition duration-150 flex items-center gap-3 font-semibold text-slate-500 hover:text-[#00C2C3] hover:bg-slate-50";
                 
                 const mBtn = document.getElementById(`m-btn-${v}`);
-                if (mBtn) {
-                    mBtn.className = "w-full text-left py-2.5 px-4 rounded-lg font-semibold text-slate-500 hover:text-[#00C2C3] block";
-                }
+                if (mBtn) mBtn.className = "w-full text-left py-2.5 px-4 rounded-lg font-semibold text-slate-500 hover:text-[#00C2C3] block";
             });
 
-            document.getElementById(`view-${viewName}`).classList.remove('hidden');
-            document.getElementById(`page-title`).innerText = titles[viewName];
+            const activeView = document.getElementById(`view-${viewName}`);
+            if (activeView) activeView.classList.remove('hidden');
             
-            document.getElementById(`btn-${viewName}`).className = "w-full text-left py-3 px-4 rounded-lg transition duration-150 flex items-center gap-3 font-semibold bg-[#00C2C3]/10 text-[#00C2C3] border-l-4 border-[#00C2C3]";
+            const titleEl = document.getElementById(`page-title`);
+            if (titleEl) titleEl.innerText = titles[viewName];
+            
+            const activeBtn = document.getElementById(`btn-${viewName}`);
+            if (activeBtn) activeBtn.className = "w-full text-left py-3 px-4 rounded-lg transition duration-150 flex items-center gap-3 font-semibold bg-[#00C2C3]/10 text-[#00C2C3] border-l-4 border-[#00C2C3]";
             
             const mActiveBtn = document.getElementById(`m-btn-${viewName}`);
             if (mActiveBtn) {
@@ -349,10 +498,77 @@
                 bookingsData = bookings;
                 populateQueueTable();
                 populateSecurityTable();
+                populateDatabaseTable();
+                renderDashboardCalendar();
                 buildCharts();
             } catch (err) {
                 console.error("API Retrieve error:", err);
             }
+        }
+
+        // Live Dynamic calendar renderer (Fills rows from 6:00 AM to 10:00 PM)
+        function renderDashboardCalendar() {
+            const dateVal = document.getElementById('calendar-view-date').value;
+            const gridBody = document.getElementById('dashboard-calendar-grid');
+            if (!gridBody) return;
+            gridBody.innerHTML = '';
+
+            for (let h = 6; h < 22; h++) {
+                const startHourStr = formatTimeLabel(h);
+                const endHourStr = formatTimeLabel(h + 1);
+                const slotLabel = `${startHourStr} to ${endHourStr}`;
+
+                let c1Status = getHourStatus(dateVal, h, h + 1, 'Court 1');
+                let c2Status = getHourStatus(dateVal, h, h + 1, 'Court 2');
+                let c3Status = getHourStatus(dateVal, h, h + 1, 'Court 3');
+
+                gridBody.innerHTML += `
+                    <tr class="hover:bg-slate-50/50 transition duration-100">
+                        <td class="py-3.5 font-semibold text-slate-400 text-xs">${slotLabel}</td>
+                        <td class="p-1">${renderCalendarCellBadge(c1Status)}</td>
+                        <td class="p-1">${renderCalendarCellBadge(c2Status)}</td>
+                        <td class="p-1">${renderCalendarCellBadge(c3Status)}</td>
+                    </tr>
+                `;
+            }
+        }
+
+        function formatTimeLabel(hour) {
+            const ampm = hour >= 12 ? 'PM' : 'AM';
+            let displayHour = hour % 12;
+            displayHour = displayHour === 0 ? 12 : displayHour;
+            return `${displayHour}:00 ${ampm}`;
+        }
+
+        function getHourStatus(date, sh, eh, court) {
+            for (let b of bookingsData) {
+                if (b.date === date) {
+                    if (b.court === court || b.court === 'Whole Gym') {
+                        let start = parseTime(b.start);
+                        let end = parseTime(b.end);
+                        // Overlap condition checks if any block intersects
+                        if (start < eh && end > sh) {
+                            return b.status; // Returns PENDING or CONFIRMED
+                        }
+                    }
+                }
+            }
+            return 'AVAILABLE';
+        }
+
+        function parseTime(t) {
+            const [h, m] = t.split(':').map(Number);
+            return h + (m/60);
+        }
+
+        // Styled calendar badges matching BidiBet reference layout
+        function renderCalendarCellBadge(status) {
+            if (status === 'CONFIRMED') {
+                return `<span class="bg-red-50 text-red-500 border border-red-100 rounded-xl text-center text-xs font-extrabold tracking-wider py-2 uppercase block w-full select-none shadow-sm shadow-red-500/5">TAKEN</span>`;
+            } else if (status === 'PENDING') {
+                return `<span class="bg-orange-50 text-orange-500 border border-orange-100 rounded-xl text-center text-xs font-extrabold tracking-wider py-2 uppercase block w-full select-none shadow-sm shadow-orange-500/5">RESERVED</span>`;
+            }
+            return `<span class="bg-indigo-50 text-indigo-600 border border-indigo-100 rounded-xl text-center text-xs font-extrabold tracking-wider py-2 uppercase block w-full select-none shadow-sm shadow-indigo-500/5">AVAILABLE</span>`;
         }
 
         function populateQueueTable() {
@@ -457,8 +673,8 @@
                         <span>$${Number(b.cost).toFixed(2)}</span>
                     </div>
                     <div style="border-top: 1px solid #ccc; padding-top: 20px; font-size: 10px; line-height: 1.5;">
-                        <h3 style="font-size: 12px; margin-top: 0; text-transform: uppercase;">Legal Liability Disclaimer of Liability</h3>
-                        <p>By signature below, the participant agrees to waive facility operations claims of physical injuries, damages, or equipment errors inside complex grounds.</p>
+                        <h3 style="font-size: 12px; margin-top: 0; text-transform: uppercase;">Legal Liability Disclaimer</h3>
+                        <p>Participant agrees to waive facility operations claims of physical injuries or equipment damages inside complex grounds.</p>
                         <div style="display: flex; justify-content: space-between; margin-top: 50px;">
                             <span style="border-top: 1px solid #000; width: 40%; text-align: center; padding-top: 8px;">Participant Signature: <strong>${b.name}</strong></span>
                             <span style="border-top: 1px solid #000; width: 40%; text-align: center; padding-top: 8px;">Supervisor Authorization</span>
@@ -528,6 +744,45 @@
             printArea.classList.add('hidden');
         }
 
+        // Fills database viewer with clean database listing of all system files
+        function populateDatabaseTable() {
+            const body = document.getElementById('database-table-body');
+            if (!body) return;
+            body.innerHTML = '';
+            
+            if (bookingsData.length === 0) {
+                body.innerHTML = `<tr><td colspan="8" class="p-4 text-center text-slate-400">No database records found.</td></tr>`;
+                return;
+            }
+
+            bookingsData.forEach(b => {
+                let statusBadge = '';
+                if (b.status === 'CONFIRMED') {
+                    statusBadge = `<span class="px-2.5 py-1 text-xs font-bold bg-green-50 text-green-600 rounded-full border border-green-100 uppercase tracking-wider">CONFIRMED</span>`;
+                } else if (b.status === 'PENDING') {
+                    statusBadge = `<span class="px-2.5 py-1 text-xs font-bold bg-orange-50 text-orange-500 rounded-full border border-orange-100 uppercase tracking-wider">PENDING</span>`;
+                } else {
+                    statusBadge = `<span class="px-2.5 py-1 text-xs font-bold bg-slate-50 text-slate-500 rounded-full border border-slate-100 uppercase tracking-wider">${b.status}</span>`;
+                }
+
+                body.innerHTML += `
+                    <tr class="hover:bg-slate-50/50 transition">
+                        <td class="p-4 font-mono font-bold text-slate-500">#${b.id}</td>
+                        <td class="p-4">
+                            <div class="font-bold text-slate-800">${b.name}</div>
+                            <div class="text-xs text-slate-400">${b.email}</div>
+                        </td>
+                        <td class="p-4">${b.sport}</td>
+                        <td class="p-4 font-semibold text-slate-700">${b.court}</td>
+                        <td class="p-4">${b.date}</td>
+                        <td class="p-4 font-mono">${b.start} - ${b.end}</td>
+                        <td class="p-4 font-extrabold text-slate-800">$${Number(b.cost).toFixed(2)}</td>
+                        <td class="p-4 text-right">${statusBadge}</td>
+                    </tr>
+                `;
+            });
+        }
+
         async function handleGodFormSubmit(e) {
             e.preventDefault();
             const formData = {
@@ -557,7 +812,6 @@
             }
         }
 
-        // Palette matching Chart.js Styling Configuration (Matching BidiBet Reference Layout)
         function buildCharts() {
             const confirmed = bookingsData.filter(b => b.status === 'CONFIRMED');
             const daysMap = {};
@@ -587,7 +841,6 @@
                 labels: { color: '#475569', font: { family: 'Plus Jakarta Sans', weight: 'bold' } }
             };
 
-            // Revenue Chart (Teal Accent Outline with soft glow fill)
             if (revenueChartInstance) revenueChartInstance.destroy();
             const ctxRev = document.getElementById('revenueChart').getContext('2d');
             revenueChartInstance = new Chart(ctxRev, {
@@ -612,7 +865,6 @@
                 }
             });
 
-            // Busiest Days Chart (Teal & Coral Alternating Bar Theme)
             if (busiestChartInstance) busiestChartInstance.destroy();
             const ctxBus = document.getElementById('busiestChart').getContext('2d');
             busiestChartInstance = new Chart(ctxBus, {
@@ -622,7 +874,7 @@
                     datasets: [{
                         label: 'Active Booking Counts',
                         data: bookingsCounts,
-                        backgroundColor: ['#B5BDF2', '#FFA570', '#00C2C3'], // Pastel Blue, Soft Coral, and Teal from reference
+                        backgroundColor: ['#B5BDF2', '#FFA570', '#00C2C3'],
                         borderRadius: 6
                     }]
                 },
