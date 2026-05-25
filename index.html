@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SKILLS Admin Console</title>
-    <!-- Tailwind CSS and Chart.js CDNs -->
+    <!-- Tailwind CSS, Chart.js, and Plus Jakarta Font -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="config.js"></script>
@@ -33,7 +33,7 @@
             background: #00C2C3;
         }
 
-        /* Printer Overrides */
+        /* Print formatting */
         @media print {
             body { background: white !important; color: black !important; }
             body * { visibility: hidden; }
@@ -101,13 +101,13 @@
             </div>
             
             <nav class="space-y-1.5 text-sm">
-                <button id="btn-dashboard" onclick="switchView('dashboard')" class="w-full text-left py-3 px-4 rounded-lg transition duration-150 flex items-center gap-3 font-semibold text-slate-500 hover:text-[#00C2C3] hover:bg-slate-50">
+                <button id="btn-dashboard" onclick="switchView('dashboard')" class="w-full text-left py-3 px-4 rounded-lg transition duration-150 flex items-center gap-3 font-semibold bg-[#00C2C3]/10 text-[#00C2C3] border-l-4 border-[#00C2C3]">
                     <span>📊</span> Dashboard
                 </button>
                 <button id="btn-security" onclick="switchView('security')" class="w-full text-left py-3 px-4 rounded-lg transition duration-150 flex items-center gap-3 font-semibold text-slate-500 hover:text-[#00C2C3] hover:bg-slate-50">
                     <span>🛡️</span> Gate Schedule
                 </button>
-                <button id="btn-godmode" onclick="switchView('godmode')" class="w-full text-left py-3 px-4 rounded-lg transition duration-150 flex items-center gap-3 font-semibold bg-[#00C2C3]/10 text-[#00C2C3] border-l-4 border-[#00C2C3]">
+                <button id="btn-godmode" onclick="switchView('godmode')" class="w-full text-left py-3 px-4 rounded-lg transition duration-150 flex items-center gap-3 font-semibold text-slate-500 hover:text-[#00C2C3] hover:bg-slate-50">
                     <span>⚡</span> Data Entry
                 </button>
                 <button id="btn-queue" onclick="switchView('queue')" class="w-full text-left py-3 px-4 rounded-lg transition duration-150 flex items-center gap-3 font-semibold text-slate-500 hover:text-[#00C2C3] hover:bg-slate-50">
@@ -132,7 +132,7 @@
         <!-- Header Banner Card -->
         <header class="bg-gradient-to-r from-[#1E2034] to-[#451C2C] text-white p-6 md:p-8 rounded-3xl flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 shadow-lg shadow-slate-200">
             <div>
-                <h1 id="page-title" class="text-2xl md:text-3xl font-extrabold tracking-tight">Manual Override System (Data Entry)</h1>
+                <h1 id="page-title" class="text-2xl md:text-3xl font-extrabold tracking-tight">SKILLS Admin Dashboard</h1>
                 <p class="text-xs text-slate-300 mt-1">Live tracking database and operational controls</p>
             </div>
             <div class="flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/10 px-4 py-2 rounded-xl text-xs font-mono">
@@ -141,11 +141,12 @@
             </div>
         </header>
 
-        <!-- Dashboard View -->
+        <!-- Dashboard View (Packages & Calendar) -->
         <section id="view-dashboard" class="space-y-8">
+            <!-- 4 Package Configuration Cards -->
             <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
                 <!-- Card 1: Regular Games -->
-                <div class="bg-white p-6 rounded-2xl shadow-sm border-t-4 border-blue-500 flex flex-col justify-between">
+                <div class="bg-white p-6 rounded-2xl shadow-sm border-t-4 border-blue-500 flex flex-col justify-between shadow-slate-100">
                     <div>
                         <h3 class="text-base font-bold text-slate-800">Regular Games</h3>
                         <p class="text-xs text-slate-400 mt-1 leading-relaxed">Basketball, Volleyball, Badminton, Pickleball</p>
@@ -161,7 +162,7 @@
                 </div>
 
                 <!-- Card 2: Package A -->
-                <div class="bg-white p-6 rounded-2xl shadow-sm border-t-4 border-purple-500 flex flex-col justify-between">
+                <div class="bg-white p-6 rounded-2xl shadow-sm border-t-4 border-purple-500 flex flex-col justify-between shadow-slate-100">
                     <div>
                         <h3 class="text-base font-bold text-slate-800">Package A</h3>
                         <p class="text-xs text-slate-400 mt-1 leading-relaxed">Exclusive Full Facility Rental</p>
@@ -177,7 +178,7 @@
                 </div>
 
                 <!-- Card 3: Package B -->
-                <div class="bg-white p-6 rounded-2xl shadow-sm border-t-4 border-teal-500 flex flex-col justify-between">
+                <div class="bg-white p-6 rounded-2xl shadow-sm border-t-4 border-teal-500 flex flex-col justify-between shadow-slate-100">
                     <div>
                         <h3 class="text-base font-bold text-slate-800">Package B</h3>
                         <p class="text-xs text-slate-400 mt-1 leading-relaxed">Court 1 + Bleachers Access</p>
@@ -193,7 +194,7 @@
                 </div>
 
                 <!-- Card 4: Package C -->
-                <div class="bg-white p-6 rounded-2xl shadow-sm border-t-4 border-rose-500 flex flex-col justify-between">
+                <div class="bg-white p-6 rounded-2xl shadow-sm border-t-4 border-rose-500 flex flex-col justify-between shadow-slate-100">
                     <div>
                         <h3 class="text-base font-bold text-slate-800">Package C</h3>
                         <p class="text-xs text-slate-400 mt-1 leading-relaxed">Standard Court + Extra Pax</p>
@@ -210,13 +211,13 @@
             </div>
 
             <!-- Date Select Input Panel -->
-            <div class="max-w-xs bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex flex-col gap-1.5">
+            <div class="max-w-xs bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex flex-col gap-1.5 shadow-slate-100">
                 <label class="text-[10px] font-extrabold text-slate-400 uppercase tracking-widest">Select Date</label>
                 <input type="date" id="calendar-view-date" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-sm text-slate-800 focus:outline-none focus:border-[#00C2C3] focus:ring-1 focus:ring-[#00C2C3]">
             </div>
 
             <!-- Hourly Interactive Court Grid (Calendar) -->
-            <div class="bg-white rounded-3xl p-6 shadow-sm border border-slate-100 overflow-hidden max-w-5xl">
+            <div class="bg-white rounded-3xl p-6 shadow-sm border border-slate-100 overflow-hidden max-w-5xl shadow-slate-100">
                 <div class="overflow-x-auto">
                     <table class="w-full text-left border-collapse min-w-[650px]">
                         <thead>
@@ -327,8 +328,8 @@
                         </div>
                     </div>
 
-                    <!-- Additional Charges Panel (applied globally) -->
-                    <div class="border border-dashed border-slate-300 rounded-2xl p-6 space-y-4">
+                    <!-- Additional Charges Panel -->
+                    <div class="border border-dashed border-slate-300 rounded-2xl p-6 space-y-4 shadow-sm">
                         <label class="block text-[10px] font-extrabold text-slate-500 uppercase tracking-wider">Additional Charges (Applied to Entire Transaction)</label>
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div>
@@ -340,7 +341,7 @@
                         </div>
                     </div>
 
-                    <!-- Grand Total Banner (Blue highlight card matching image) -->
+                    <!-- Grand Total Banner -->
                     <div class="bg-blue-50/60 border border-blue-200/50 p-6 rounded-2xl flex flex-col gap-1 shadow-sm">
                         <span class="text-[10px] font-extrabold text-blue-600 uppercase tracking-widest">Grand Total Payable (PHP)</span>
                         <span id="god-grand-total" class="text-4xl font-black text-blue-900">0.00</span>
@@ -452,6 +453,17 @@
         let busiestChartInstance = null;
         let slotCounter = 0;
 
+        // PHP Synchronized Rates (Hourly Splits)
+        const RATES = {
+            "Basketball": { day: 450.00, night: 550.00 },
+            "Volleyball": { day: 450.00, night: 550.00 },
+            "Badminton": { day: 450.00, night: 550.00 },
+            "Pickleball": { day: 450.00, night: 550.00 },
+            "Package A": { day: 1500.00, night: 2500.00 },
+            "Package B": { day: 600.00, night: 700.00 },
+            "Package C": { day: 550.00, night: 650.00 }
+        };
+
         document.addEventListener("DOMContentLoaded", () => {
             document.getElementById('new-booking-entry-form').addEventListener('submit', handleNewBookingEntrySubmit);
             document.getElementById('add-slot-btn').addEventListener('click', addBookingSlotItem);
@@ -545,7 +557,7 @@
             const slotCard = document.createElement('div');
             
             slotCard.id = `slot-${slotCounter}`;
-            slotCard.className = "booking-slot-item bg-slate-50 p-6 rounded-2xl border border-slate-200/60 relative space-y-4 shadow-sm";
+            slotCard.className = "booking-slot-item bg-slate-50 p-6 rounded-2xl border border-slate-200/60 relative space-y-4 shadow-sm animate-fadeIn";
             
             const todayStr = new Date().toISOString().split('T')[0];
 
@@ -681,7 +693,7 @@
             calculateGodSummary();
         }
 
-        // Live computations of all booking summary values
+        // Live computations of all booking summary values using hourly Day/Night pricing splits
         function calculateGodSummary() {
             const slots = document.querySelectorAll('.booking-slot-item');
             let totalHours = 0;
@@ -689,7 +701,6 @@
 
             slots.forEach(slot => {
                 const sport = slot.querySelector('.slot-sport').value;
-                const court = slot.querySelector('.slot-court').value;
                 const startVal = slot.querySelector('.slot-start').value;
                 const endVal = slot.querySelector('.slot-end').value;
 
@@ -701,22 +712,18 @@
                         const delta = end - start;
                         totalHours += delta;
 
-                        // Local price computation mapping Code.gs rate structures
-                        let price = 0;
-                        let flatRate = null;
-                        if (sport === "Package A") flatRate = 80;
-                        else if (sport === "Package B") flatRate = 20;
-                        else if (sport === "Package C") flatRate = 18;
+                        const rateConfig = RATES[sport] || { day: 450.00, night: 550.00 };
+                        let slotPrice = 0;
 
-                        if (flatRate !== null) {
-                            price = delta * flatRate;
-                        } else {
-                            for (let h = start; h < end; h += 0.5) {
-                                if (h >= 6 && h < 17) price += 0.5 * 15;
-                                else price += 0.5 * 25;
+                        // Process this slot's span in 30-minute blocks
+                        for (let h = start; h < end; h += 0.5) {
+                            if (h >= 6 && h < 17) {
+                                slotPrice += 0.5 * rateConfig.day; // Day Rate Block
+                            } else if (h >= 17 && h < 22) {
+                                slotPrice += 0.5 * rateConfig.night; // Night Rate Block
                             }
                         }
-                        baseAmount += price;
+                        baseAmount += slotPrice;
                     }
                 }
             });
