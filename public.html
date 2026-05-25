@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sports Complex Booking</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="config.js"></script>
+    <style>
+        .glass {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-indigo-50 to-blue-100 min-h-screen text-gray-800 p-4">
+
+    <div class="max-w-7xl mx-auto space-y-8">
+        <header class="text-center py-6">
+            <h1 class="text-4xl font-extrabold text-indigo-950 tracking-tight">Arena Reservations</h1>
+            <p class="text-gray-600 mt-2">Dynamic Live Schedule & Booking Portal</p>
+        </header>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            <div class="lg:col-span-7 glass rounded-2xl p-6 shadow-xl">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-xl font-bold text-gray-800">Live Court Availability</h2>
+                    <input type="date" id="view-date" class="border border-gray-300 rounded-lg p-2 focus:ring focus:ring-indigo-200">
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="border-b border-gray-200 text-sm font-semibold text-gray-500">
+                                <th class="py-2">Time Slot</th>
+                                <th class="py-2 text-center">Court 1</th>
+                                <th class="py-2 text-center">Court 2</th>
+                                <th class="py-2 text-center">Court 3</th>
+                            </tr>
+                        </thead>
+                        <tbody id="availability-grid" class="text-sm"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="lg:col-span-5 space-y-6">
+                <div class="glass rounded-2xl p-6 shadow-xl">
+                    <h3 class="font-bold text-lg mb-3">Rate Sheet</h3>
+                    <div class="grid grid-cols-2 gap-2 text-xs text-gray-600">
+                        <div>🏀 Day Rate (6AM - 5PM): <b class="text-indigo-900">$15/hr</b></div>
+                        <div>🌙 Night Rate (5PM - 10PM): <b class="text-indigo-900">$25/hr</b></div>
+                        <div>📦 Pkg A (Whole Gym): <b class="text-indigo-900">$80/hr</b></div>
+                        <div>📦 Pkg B (Court 1): <b class="text-indigo-900">$20/hr</b></div>
+                    </div>
+                </div>
+
+                <div class="glass rounded-2xl p-6 shadow-xl relative overflow-hidden">
+                    <div id="countdown-banner" class="hidden bg-yellow-500 text-yellow-950 font-semibold p-2 text-center text-xs absolute top-0 left-0 right-0">
+                        Holding spot! Submit inside: <span id="timer">20:00</span>
+                    </div>
+
+                    <form id="booking-form" class="space-y-4 mt-2">
+                        <div>
+                            <label class="block text-xs font-semibold uppercase tracking-wider text-gray-500">Full Name</label>
+                            <input type="text" id="form-name" required class="w-full mt-1 border border-gray-300 rounded-lg p-2 focus:ring focus:ring-indigo-200">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold uppercase tracking-wider text-gray-500">Email Address</label>
+                            <input type="email" id="form-email" required class="w-full mt-1 border border-gray-300 rounded-lg p-2 focus:ring focus:ring-indigo-200">
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-semibold uppercase tracking-wider text-gray-500">Sport / Package</label>
+                                <select id="form-sport" class="w-full mt-1 border border-gray-300 rounded-lg p-2 focus:ring focus:ring-indigo-200">
+                                    <option value="Basketball">Basketball</option>
+                                    <option value="Volleyball">Volleyball</option>
+                                    <option value="Badminton">Badminton</option>
+                                    <option value="Pickleball">Pickleball</option>
+                                    <option value="Package A">Package A (Whole Gym)</option>
+                                    <option value="Package B">Package B (Court 1)</option>
+                                    <option value="Package C">Package C (Court 3)</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold uppercase tracking-wider text-gray-500">Court Selection</label>
+                                <select id="form-court" class="w-full mt-1 border border-gray-300 rounded-lg p-2 focus:ring focus:ring-indigo-200">
+                                    <option value="Court 1">Court 1</option>
+                                    <option value="Court 2">Court 2</option>
+                                    <option value="Court 3">Court 3</option>
+                                    <option value="Whole Gym">Whole Gym</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-3 gap-2">
+                            <div>
+                                <label class="block text-xs font-semibold uppercase tracking-wider text-gray-500">Date</label>
+                                <input type="date" id="form-date" required class="w-full mt-1 border border-gray-300 rounded-lg p-2 text-sm">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold uppercase tracking-wider text-gray-500">Start Time</label>
+                                <select id="form-start" class="w-full mt-1 border border-gray-300 rounded-lg p-2 text-sm"></select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold uppercase tracking-wider text-gray-500">End Time</label>
+                                <select id="form-end" class="w-full mt-1 border border-gray-300 rounded-lg p-2 text-sm"></select>
+                            </div>
+                        </div>
+                        <div class="bg-indigo-50/50 rounded-lg p-4 flex justify-between items-center">
+                            <span class="text-sm font-medium text-gray-600">Calculated Cost:</span>
+                            <span id="price-display" class="text-2xl font-black text-indigo-900">$0.00</span>
+                        </div>
+                        <button type="submit" class="w-full bg-indigo-600 text-white font-semibold py-3 rounded-lg shadow-lg hover:bg-indigo-700 transition duration-150">
+                            Lock Booking Space
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="alert-modal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
+        <div class="glass max-w-md w-full rounded-2xl p-6 shadow-2xl text-center space-y-4">
+            <h3 id="modal-title" class="text-xl font-bold"></h3>
+            <p id="modal-message" class="text-gray-600 text-sm"></p>
+            <button id="modal-close" class="bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 font-semibold text-sm">Dismiss</button>
+        </div>
+    </div>
+
+    <script>
+        let allBookings = [];
+        let timerInterval = null;
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const todayStr = new Date().toISOString().split('T')[0];
+            document.getElementById('view-date').value = todayStr;
+            document.getElementById('form-date').value = todayStr;
+
+            generateTimeOptions();
+            
+            document.getElementById('view-date').addEventListener('change', refreshData);
+            document.getElementById('form-sport').addEventListener('change', handleSmartFormRules);
+            document.getElementById('form-start').addEventListener('change', calculateLivePrice);
+            document.getElementById('form-end').addEventListener('change', calculateLivePrice);
+            document.getElementById('form-sport').addEventListener('change', calculateLivePrice);
+            document.getElementById('booking-form').addEventListener('submit', handleFormSubmit);
+            document.getElementById('modal-close').addEventListener('click', () => {
+                document.getElementById('alert-modal').classList.add('hidden');
+            });
+
+            refreshData();
+            handleSmartFormRules();
+        });
+
+        function generateTimeOptions() {
+            const startSelect = document.getElementById('form-start');
+            const endSelect = document.getElementById('form-end');
+            for (let hour = 6; hour <= 22; hour++) {
+                let hourStr = hour < 10 ? '0' + hour : hour;
+                if (hour !== 22) {
+                    startSelect.innerHTML += `<option value="${hourStr}:00">${hourStr}:00</option>`;
+                }
+                if (hour !== 6) {
+                    endSelect.innerHTML += `<option value="${hourStr}:00">${hourStr}:00</option>`;
+                }
+                if (hour !== 22) {
+                    startSelect.innerHTML += `<option value="${hourStr}:30">${hourStr}:30</option>`;
+                    endSelect.innerHTML += `<option value="${hourStr}:30">${hourStr}:30</option>`;
+                }
+            }
+        }
+
+        function handleSmartFormRules() {
+            const sport = document.getElementById('form-sport').value;
+            const courtSelect = document.getElementById('form-court');
+            courtSelect.disabled = false;
+            for (let option of courtSelect.options) {
+                option.hidden = false;
+                option.disabled = false;
+            }
+            if (sport === 'Volleyball') {
+                courtSelect.value = 'Court 1';
+                courtSelect.options[1].disabled = true;
+                courtSelect.options[3].disabled = true;
+            } else if (sport === 'Badminton') {
+                courtSelect.value = 'Court 2';
+                courtSelect.options[0].disabled = true;
+                courtSelect.options[2].disabled = true;
+                courtSelect.options[3].disabled = true;
+            } else if (sport === 'Package A') {
+                courtSelect.value = 'Whole Gym';
+                courtSelect.disabled = true;
+            } else if (sport === 'Package B') {
+                courtSelect.value = 'Court 1';
+                courtSelect.disabled = true;
+            } else if (sport === 'Package C') {
+                courtSelect.value = 'Court 3';
+                courtSelect.disabled = true;
+            } else {
+                courtSelect.options[3].disabled = true;
+            }
+        }
+
+        async function refreshData() {
+            try {
+                // RESTful Call replacing google.script.run
+                const data = await callAPI('getActiveBookings');
+                allBookings = data;
+                renderGrid();
+            } catch (err) {
+                console.error("API Fetch Error:", err);
+            }
+        }
+
+        function renderGrid() {
+            const dateVal = document.getElementById('view-date').value;
+            const gridBody = document.getElementById('availability-grid');
+            gridBody.innerHTML = '';
+
+            for (let h = 6; h < 22; h++) {
+                const stepTimes = [`${h < 10 ? '0'+h : h}:00`, `${h < 10 ? '0'+h : h}:30`];
+                stepTimes.forEach(time => {
+                    let c1 = getStatus(dateVal, time, 'Court 1');
+                    let c2 = getStatus(dateVal, time, 'Court 2');
+                    let c3 = getStatus(dateVal, time, 'Court 3');
+                    gridBody.innerHTML += `
+                        <tr class="border-b border-gray-100">
+                            <td class="py-2 font-semibold text-gray-500">${time}</td>
+                            <td class="p-1">${renderStatusBadge(c1)}</td>
+                            <td class="p-1">${renderStatusBadge(c2)}</td>
+                            <td class="p-1">${renderStatusBadge(c3)}</td>
+                        </tr>
+                    `;
+                });
+            }
+        }
+
+        function getStatus(date, time, court) {
+            let fractionalTime = parseTime(time);
+            for (let b of allBookings) {
+                if (b.date === date) {
+                    if (b.court === court || b.court === 'Whole Gym') {
+                        let start = parseTime(b.start);
+                        let end = parseTime(b.end);
+                        if (fractionalTime >= start && fractionalTime < end) {
+                            return b.status;
+                        }
+                    }
+                }
+            }
+            return 'OPEN';
+        }
+
+        function parseTime(t) {
+            const [h, m] = t.split(':').map(Number);
+            return h + (m/60);
+        }
+
+        function renderStatusBadge(status) {
+            if (status === 'CONFIRMED') {
+                return `<div class="bg-red-500 text-white rounded text-center text-xs py-1 font-bold">TAKEN</div>`;
+            } else if (status === 'PENDING') {
+                return `<div class="bg-yellow-500 text-yellow-950 rounded text-center text-xs py-1 font-bold">RESERVED</div>`;
+            }
+            return `<div class="bg-emerald-100 text-emerald-800 rounded text-center text-xs py-1">OPEN</div>`;
+        }
+
+        function calculateLivePrice() {
+            const sport = document.getElementById('form-sport').value;
+            const startVal = document.getElementById('form-start').value;
+            const endVal = document.getElementById('form-end').value;
+            const start = parseTime(startVal);
+            const end = parseTime(endVal);
+
+            if (start >= end) {
+                document.getElementById('price-display').innerText = '$0.00';
+                return;
+            }
+
+            let price = 0;
+            let flatRate = null;
+            if (sport === "Package A") flatRate = 80;
+            else if (sport === "Package B") flatRate = 20;
+            else if (sport === "Package C") flatRate = 18;
+
+            if (flatRate !== null) {
+                price = (end - start) * flatRate;
+            } else {
+                for (let h = start; h < end; h += 0.5) {
+                    if (h >= 6 && h < 17) price += 0.5 * 15;
+                    else price += 0.5 * 25;
+                }
+            }
+            document.getElementById('price-display').innerText = `$${price.toFixed(2)}`;
+        }
+
+        async function handleFormSubmit(e) {
+            e.preventDefault();
+            const date = document.getElementById('form-date').value;
+            const start = document.getElementById('form-start').value;
+            const end = document.getElementById('form-end').value;
+            const court = document.getElementById('form-court').value;
+
+            if (parseTime(start) >= parseTime(end)) {
+                showAlert("Form Validation Error", "The start time must configure to begin before your end time.");
+                return;
+            }
+
+            const today = new Date();
+            const inputDateTime = new Date(`${date}T${start}`);
+            const minAdvanceTime = new Date(today.getTime() + (3 * 60 * 60 * 1000));
+            
+            if (inputDateTime < minAdvanceTime) {
+                showAlert("Time Policy Restriction", "Regular client bookings must be completed at least 3 hours prior to slot initiation.");
+                return;
+            }
+
+            const formData = {
+                name: document.getElementById('form-name').value,
+                email: document.getElementById('form-email').value,
+                sport: document.getElementById('form-sport').value,
+                court: court,
+                date: date,
+                start: start,
+                end: end,
+                godMode: 'false'
+            };
+
+            // Post to apps script API
+            try {
+                const res = await callAPI('submitBooking', formData);
+                if (res.success) {
+                    showAlert("Reservation Recorded", `Booking ID #${res.bookingId} holds a 20-minute administrative approval window.`);
+                    startLockTimer();
+                    document.getElementById('booking-form').reset();
+                    refreshData();
+                } else {
+                    showAlert("Registration Failed", res.msg);
+                }
+            } catch (err) {
+                console.error(err);
+                showAlert("Connection Error", "Could not complete the transaction with Google Sheets.");
+            }
+        }
+
+        function startLockTimer() {
+            clearInterval(timerInterval);
+            const banner = document.getElementById('countdown-banner');
+            const timer = document.getElementById('timer');
+            banner.classList.remove('hidden');
+
+            let seconds = 20 * 60;
+            timerInterval = setInterval(() => {
+                seconds--;
+                let mins = Math.floor(seconds / 60);
+                let secs = seconds % 60;
+                timer.innerText = `${mins}:${secs < 10 ? '0'+secs : secs}`;
+
+                if (seconds <= 0) {
+                    clearInterval(timerInterval);
+                    banner.classList.add('hidden');
+                    showAlert("Holding Window Expired", "Your 20-minute administrative approval hold has timed out.");
+                    refreshData();
+                }
+            }, 1000);
+        }
+
+        function showAlert(title, message) {
+            document.getElementById('modal-title').innerText = title;
+            document.getElementById('modal-message').innerText = message;
+            document.getElementById('alert-modal').classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>

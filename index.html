@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Enterprise Security Admin Console</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="config.js"></script>
+    <style>
+        @media print {
+            body * { visibility: hidden; }
+            #printable-section, #printable-section * { visibility: visible; }
+            #printable-section { position: absolute; left: 0; top: 0; width: 100%; }
+        }
+    </style>
+</head>
+<body class="bg-gray-100 flex min-h-screen text-gray-800">
+
+    <aside class="w-64 bg-indigo-950 text-indigo-100 p-6 flex-shrink-0 flex flex-col justify-between hidden md:flex">
+        <div class="space-y-6">
+            <h2 class="text-xl font-bold border-b border-indigo-800 pb-4">Stadium Admin</h2>
+            <nav class="space-y-2 text-sm font-semibold">
+                <button onclick="switchView('dashboard')" class="w-full text-left py-2 px-3 hover:bg-indigo-900 rounded-lg">📊 Telemetry Dashboard</button>
+                <button onclick="switchView('queue')" class="w-full text-left py-2 px-3 hover:bg-indigo-900 rounded-lg">📋 Request Queue</button>
+                <button onclick="switchView('godmode')" class="w-full text-left py-2 px-3 hover:bg-indigo-900 rounded-lg">⚡ Walk-In Entry (God Mode)</button>
+                <button onclick="switchView('security')" class="w-full text-left py-2 px-3 hover:bg-indigo-900 rounded-lg">🛡️ Gate Pass Schedule</button>
+            </nav>
+        </div>
+        <div class="text-xs text-indigo-400">Enterprise Edition v2.1</div>
+    </aside>
+
+    <main class="flex-1 p-8 space-y-8 overflow-y-auto">
+        <section id="view-dashboard" class="space-y-6">
+            <h1 class="text-3xl font-extrabold text-indigo-950">System Metrics & Utilization</h1>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div class="bg-white p-6 rounded-xl shadow-md border">
+                    <h3 class="font-bold text-gray-700 mb-4">Total Revenue Over Days ($)</h3>
+                    <canvas id="revenueChart" height="150"></canvas>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-md border">
+                    <h3 class="font-bold text-gray-700 mb-4">Busiest Days (Count)</h3>
+                    <canvas id="busiestChart" height="150"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <section id="view-queue" class="space-y-6 hidden">
+            <h1 class="text-3xl font-extrabold text-indigo-950">Verification Pipeline Queue</h1>
+            <div class="bg-white rounded-xl shadow border overflow-hidden">
+                <table class="w-full text-left border-collapse">
+                    <thead class="bg-gray-50 text-gray-600 text-xs uppercase">
+                        <tr>
+                            <th class="p-4">ID</th>
+                            <th class="p-4">Name</th>
+                            <th class="p-4">Target Details</th>
+                            <th class="p-4">Financial Quote</th>
+                            <th class="p-4 text-right">Administrative Execution</th>
+                        </tr>
+                    </thead>
+                    <tbody id="queue-body" class="divide-y divide-gray-100 text-sm"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <section id="view-godmode" class="space-y-6 hidden">
+            <div class="max-w-xl mx-auto bg-white p-8 rounded-2xl shadow-lg border">
+                <h2 class="text-2xl font-black text-indigo-950 mb-4">Manual Entry Override (God Mode)</h2>
+                <form id="god-form" class="space-y-4">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-semibold">Client Name</label>
+                            <input type="text" id="g-name" required class="w-full mt-1 border border-gray-300 rounded p-2 text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold">Email</label>
+                            <input type="email" id="g-email" required class="w-full mt-1 border border-gray-300 rounded p-2 text-sm">
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-semibold">Sport</label>
+                            <input type="text" id="g-sport" value="Basketball" class="w-full mt-1 border border-gray-300 rounded p-2 text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold">Court</label>
+                            <input type="text" id="g-court" value="Court 1" class="w-full mt-1 border border-gray-300 rounded p-2 text-sm">
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-3 gap-2">
+                        <div>
+                            <label class="block text-xs font-semibold">Date</label>
+                            <input type="date" id="g-date" required class="w-full mt-1 border border-gray-300 rounded p-2 text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold">Start Time</label>
+                            <input type="text" id="g-start" placeholder="08:00" class="w-full mt-1 border border-gray-300 rounded p-2 text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold">End Time</label>
+                            <input type="text" id="g-end" placeholder="10:00" class="w-full mt-1 border border-gray-300 rounded p-2 text-sm">
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-semibold">Payment Method</label>
+                            <select id="g-pay" class="w-full mt-1 border border-gray-300 rounded p-2 text-sm">
+                                <option value="Cash">Cash Handover</option>
+                                <option value="Online">Online Bank Transfer</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold">Reference Number</label>
+                            <input type="text" id="g-ref" placeholder="Txn ID" class="w-full mt-1 border border-gray-300 rounded p-2 text-sm">
+                        </div>
+                    </div>
+                    <button type="submit" class="w-full bg-indigo-950 text-white p-3 rounded font-semibold text-sm hover:bg-black">Authorize Instant Slot</button>
+                </form>
+            </div>
+        </section>
+
+        <section id="view-security" class="space-y-6 hidden">
+            <div class="bg-white p-6 rounded-xl border flex justify-between items-center shadow-md">
+                <div>
+                    <h2 class="text-xl font-bold">Gate Guard Security Sheet</h2>
+                </div>
+                <button onclick="printGateSchedule()" class="bg-indigo-950 hover:bg-black text-white px-4 py-2 rounded text-xs font-semibold">Generate Print List</button>
+            </div>
+            <div class="bg-white rounded-xl border shadow">
+                <table class="w-full text-left">
+                    <thead class="bg-gray-50 text-xs">
+                        <tr>
+                            <th class="p-4">Secure Pass #</th>
+                            <th class="p-4">Location</th>
+                            <th class="p-4">Time Block</th>
+                            <th class="p-4">Verified Ingress Guest Name</th>
+                        </tr>
+                    </thead>
+                    <tbody id="security-table-body" class="text-sm divide-y"></tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <div id="printable-section" class="hidden"></div>
+
+    <script>
+        let bookingsData = [];
+        let revenueChartInstance = null;
+        let busiestChartInstance = null;
+
+        document.addEventListener("DOMContentLoaded", () => {
+            document.getElementById('god-form').addEventListener('submit', handleGodFormSubmit);
+            refreshAdminData();
+        });
+
+        function switchView(viewName) {
+            ['dashboard', 'queue', 'godmode', 'security'].forEach(v => {
+                document.getElementById(`view-${v}`).classList.add('hidden');
+            });
+            document.getElementById(`view-${viewName}`).classList.remove('hidden');
+        }
+
+        async function refreshAdminData() {
+            try {
+                const bookings = await callAPI('getActiveBookings');
+                bookingsData = bookings;
+                populateQueueTable();
+                populateSecurityTable();
+                buildCharts();
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        function populateQueueTable() {
+            const body = document.getElementById('queue-body');
+            body.innerHTML = '';
+            const pendingList = bookingsData.filter(b => b.status === 'PENDING');
+            if (pendingList.length === 0) {
+                body.innerHTML = `<tr><td colspan="5" class="p-6 text-center text-gray-400">Pipeline clean. No actions needed.</td></tr>`;
+                return;
+            }
+            pendingList.forEach(b => {
+                body.innerHTML += `
+                    <tr>
+                        <td class="p-4 font-mono font-bold">#${b.id}</td>
+                        <td class="p-4">
+                            <div class="font-bold text-gray-900">${b.name}</div>
+                            <div class="text-xs text-gray-400">${b.email}</div>
+                        </td>
+                        <td class="p-4">
+                            <span class="text-xs font-semibold px-2 py-0.5 bg-indigo-50 text-indigo-800 rounded-full">${b.sport}</span>
+                            <div class="text-xs text-gray-600 mt-1">${b.court} | ${b.date}</div>
+                            <div class="text-xs font-mono font-bold text-indigo-900">${b.start} - ${b.end}</div>
+                        </td>
+                        <td class="p-4 font-black text-gray-900">$${Number(b.cost).toFixed(2)}</td>
+                        <td class="p-4 text-right space-y-2">
+                            <div class="flex justify-end gap-2">
+                                <input type="number" id="charge-${b.id}" placeholder="Charges" class="w-20 border border-gray-300 rounded p-1 text-xs">
+                                <button onclick="actionRequest('${b.id}', 'APPROVE')" class="bg-emerald-600 text-white font-bold px-3 py-1 rounded text-xs hover:bg-emerald-700">Approve</button>
+                                <button onclick="triggerRejectPrompt('${b.id}')" class="bg-red-600 text-white font-bold px-3 py-1 rounded text-xs hover:bg-red-700">Reject</button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        async function actionRequest(bookingId, action) {
+            let reason = '';
+            let charges = 0;
+
+            if (action === 'REJECT') {
+                reason = prompt("Provide booking rejection rationale:");
+                if (!reason) {
+                    alert("A rejection reason is required to process this cancellation.");
+                    return;
+                }
+            } else {
+                charges = document.getElementById(`charge-${bookingId}`).value || 0;
+            }
+
+            try {
+                const res = await callAPI('processBookingAction', {
+                    bookingId: bookingId,
+                    action: action,
+                    reason: reason,
+                    extraCharges: charges
+                });
+
+                if (res.success) {
+                    alert(`Request status updated successfully.`);
+                    if (action === 'APPROVE') {
+                        generateReceiptTemplate(bookingId);
+                    }
+                    refreshAdminData();
+                } else {
+                    alert(res.msg);
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        function triggerRejectPrompt(id) {
+            actionRequest(id, 'REJECT');
+        }
+
+        function generateReceiptTemplate(bookingId) {
+            const b = bookingsData.find(item => item.id.toString() === bookingId.toString());
+            if (!b) return;
+
+            const printArea = document.getElementById('printable-section');
+            printArea.innerHTML = `
+                <div style="font-family: Arial, sans-serif; padding: 30px; border: 2px dashed #333; margin-bottom: 40px; border-radius: 8px;">
+                    <h1 style="font-size: 26px; font-weight: 900; margin: 0; text-align: center;">SPORTPLEX RECEIPT</h1>
+                    <p style="text-align: center; font-size: 11px;">ADMINISTRATIVE COPY</p>
+                    <p><strong>Billed To:</strong> ${b.name}</p>
+                    <p><strong>Session Court:</strong> ${b.court} (${b.sport})</p>
+                    <p><strong>Receipt Number:</strong> #${b.id}</p>
+                    <p><strong>Date/Time:</strong> ${b.date} | ${b.start} - ${b.end}</p>
+                    <div style="background: #eee; font-size: 18px; font-weight: 900; padding: 10px;">Total Paid: $${Number(b.cost).toFixed(2)}</div>
+                </div>
+            `;
+            printArea.classList.remove('hidden');
+            window.print();
+            printArea.classList.add('hidden');
+        }
+
+        function populateSecurityTable() {
+            const body = document.getElementById('security-table-body');
+            body.innerHTML = '';
+            const confirmed = bookingsData.filter(b => b.status === 'CONFIRMED');
+
+            if (confirmed.length === 0) {
+                body.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-gray-400">No active confirmed bookings logged for today.</td></tr>`;
+                return;
+            }
+            confirmed.forEach(b => {
+                body.innerHTML += `
+                    <tr>
+                        <td class="p-4 font-mono font-bold">#${b.id}</td>
+                        <td class="p-4">${b.court}</td>
+                        <td class="p-4 font-mono">${b.start} - ${b.end}</td>
+                        <td class="p-4 font-bold">${b.name}</td>
+                    </tr>
+                `;
+            });
+        }
+
+        function printGateSchedule() {
+            const confirmed = bookingsData.filter(b => b.status === 'CONFIRMED');
+            const printArea = document.getElementById('printable-section');
+            let rows = '';
+            confirmed.forEach(b => {
+                rows += `<tr><td>#${b.id}</td><td>${b.court}</td><td>${b.start} - ${b.end}</td><td>${b.name}</td></tr>`;
+            });
+            printArea.innerHTML = `<table>${rows}</table>`;
+            printArea.classList.remove('hidden');
+            window.print();
+            printArea.classList.add('hidden');
+        }
+
+        async function handleGodFormSubmit(e) {
+            e.preventDefault();
+            const formData = {
+                name: document.getElementById('g-name').value,
+                email: document.getElementById('g-email').value,
+                sport: document.getElementById('g-sport').value,
+                court: document.getElementById('g-court').value,
+                date: document.getElementById('g-date').value,
+                start: document.getElementById('g-start').value,
+                end: document.getElementById('g-end').value,
+                paymentMode: document.getElementById('g-pay').value,
+                refNum: document.getElementById('g-ref').value,
+                godMode: 'true'
+            };
+
+            try {
+                const res = await callAPI('submitBooking', formData);
+                if (res.success) {
+                    alert(`God Mode Entry Confirmed. ID #${res.bookingId}`);
+                    document.getElementById('god-form').reset();
+                    refreshAdminData();
+                } else {
+                    alert(res.msg);
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        function buildCharts() {
+            const confirmed = bookingsData.filter(b => b.status === 'CONFIRMED');
+            const daysMap = {};
+            const revMap = {};
+
+            confirmed.forEach(b => {
+                daysMap[b.date] = (daysMap[b.date] || 0) + 1;
+                revMap[b.date] = (revMap[b.date] || 0) + Number(b.cost);
+            });
+
+            const labels = Object.keys(daysMap);
+            const bookingsCounts = Object.values(daysMap);
+            const revenues = labels.map(label => revMap[label]);
+
+            if (revenueChartInstance) revenueChartInstance.destroy();
+            const ctxRev = document.getElementById('revenueChart').getContext('2d');
+            revenueChartInstance = new Chart(ctxRev, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{ label: 'Gross Daily Revenue ($)', data: revenues, borderColor: '#4338ca', fill: true }]
+                }
+            });
+
+            if (busiestChartInstance) busiestChartInstance.destroy();
+            const ctxBus = document.getElementById('busiestChart').getContext('2d');
+            busiestChartInstance = new Chart(ctxBus, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{ label: 'Ingress Volume', data: bookingsCounts, backgroundColor: '#0f172a' }]
+                }
+            });
+        }
+    </script>
+</body>
+</html>
