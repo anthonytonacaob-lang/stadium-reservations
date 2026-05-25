@@ -101,13 +101,13 @@
             </div>
             
             <nav class="space-y-1.5 text-sm">
-                <button id="btn-dashboard" onclick="switchView('dashboard')" class="w-full text-left py-3 px-4 rounded-lg transition duration-150 flex items-center gap-3 font-semibold bg-[#00C2C3]/10 text-[#00C2C3] border-l-4 border-[#00C2C3]">
+                <button id="btn-dashboard" onclick="switchView('dashboard')" class="w-full text-left py-3 px-4 rounded-lg transition duration-150 flex items-center gap-3 font-semibold text-slate-500 hover:text-[#00C2C3] hover:bg-slate-50">
                     <span>📊</span> Dashboard
                 </button>
                 <button id="btn-security" onclick="switchView('security')" class="w-full text-left py-3 px-4 rounded-lg transition duration-150 flex items-center gap-3 font-semibold text-slate-500 hover:text-[#00C2C3] hover:bg-slate-50">
                     <span>🛡️</span> Gate Schedule
                 </button>
-                <button id="btn-godmode" onclick="switchView('godmode')" class="w-full text-left py-3 px-4 rounded-lg transition duration-150 flex items-center gap-3 font-semibold text-slate-500 hover:text-[#00C2C3] hover:bg-slate-50">
+                <button id="btn-godmode" onclick="switchView('godmode')" class="w-full text-left py-3 px-4 rounded-lg transition duration-150 flex items-center gap-3 font-semibold bg-[#00C2C3]/10 text-[#00C2C3] border-l-4 border-[#00C2C3]">
                     <span>⚡</span> Data Entry
                 </button>
                 <button id="btn-queue" onclick="switchView('queue')" class="w-full text-left py-3 px-4 rounded-lg transition duration-150 flex items-center gap-3 font-semibold text-slate-500 hover:text-[#00C2C3] hover:bg-slate-50">
@@ -132,7 +132,7 @@
         <!-- Header Banner Card -->
         <header class="bg-gradient-to-r from-[#1E2034] to-[#451C2C] text-white p-6 md:p-8 rounded-3xl flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 shadow-lg shadow-slate-200">
             <div>
-                <h1 id="page-title" class="text-2xl md:text-3xl font-extrabold tracking-tight">SKILLS Admin Dashboard</h1>
+                <h1 id="page-title" class="text-2xl md:text-3xl font-extrabold tracking-tight">Manual Override System (Data Entry)</h1>
                 <p class="text-xs text-slate-300 mt-1">Live tracking database and operational controls</p>
             </div>
             <div class="flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/10 px-4 py-2 rounded-xl text-xs font-mono">
@@ -141,9 +141,8 @@
             </div>
         </header>
 
-        <!-- Dashboard View (Packages and Live Schedule Calendar Grid) -->
+        <!-- Dashboard View -->
         <section id="view-dashboard" class="space-y-8">
-            <!-- 4 Package Configuration Cards -->
             <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
                 <!-- Card 1: Regular Games -->
                 <div class="bg-white p-6 rounded-2xl shadow-sm border-t-4 border-blue-500 flex flex-col justify-between">
@@ -261,62 +260,104 @@
             </div>
         </section>
 
-        <!-- Walk-In override (Data Entry) View -->
+        <!-- Dynamic Walk-In Override (Data Entry - Match Image) -->
         <section id="view-godmode" class="space-y-6 hidden">
-            <div class="max-w-2xl mx-auto bg-white p-4 md:p-8 rounded-3xl border border-slate-100 shadow-2xl">
-                <h2 class="text-xl md:text-2xl font-extrabold text-slate-800 tracking-tight">Manual Entry Override (Data Entry)</h2>
-                <p class="text-xs text-slate-400 mt-1 mb-6">Immediate reservation authorization bypass tools.</p>
+            <div class="max-w-4xl mx-auto bg-white p-6 md:p-8 rounded-3xl border border-slate-100 shadow-xl">
+                <h2 class="text-2xl font-black text-slate-800 tracking-tight mb-6">New Booking Entry</h2>
                 
-                <form id="god-form" class="space-y-5">
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider">Client Name</label>
-                            <input type="text" id="g-name" required class="w-full mt-1.5 bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-sm text-slate-800 focus:outline-none focus:border-[#00C2C3] focus:ring-1 focus:ring-[#00C2C3]">
+                <form id="new-booking-entry-form" class="space-y-6">
+                    <!-- Client Info Area -->
+                    <div class="bg-slate-50/50 p-6 rounded-2xl border border-slate-100 space-y-4">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-[10px] font-extrabold text-slate-500 uppercase tracking-wider">Full Name</label>
+                                <input type="text" id="god-client-name" required placeholder="Enter complete name" class="w-full mt-1.5 bg-white border border-slate-200 rounded-xl p-2.5 text-sm text-slate-800 focus:outline-none focus:border-[#00C2C3] focus:ring-1 focus:ring-[#00C2C3]">
+                            </div>
+                            <div>
+                                <label class="block text-[10px] font-extrabold text-slate-500 uppercase tracking-wider">Organization Name</label>
+                                <input type="text" id="god-org" placeholder="Enter organization (Optional)" class="w-full mt-1.5 bg-white border border-slate-200 rounded-xl p-2.5 text-sm text-slate-800 focus:outline-none focus:border-[#00C2C3] focus:ring-1 focus:ring-[#00C2C3]">
+                            </div>
                         </div>
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider">Email Address</label>
-                            <input type="email" id="g-email" required class="w-full mt-1.5 bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-sm text-slate-800 focus:outline-none focus:border-[#00C2C3] focus:ring-1 focus:ring-[#00C2C3]">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-[10px] font-extrabold text-slate-500 uppercase tracking-wider">Email Address</label>
+                                <input type="email" id="god-email" required placeholder="Enter email to send receipt" class="w-full mt-1.5 bg-white border border-slate-200 rounded-xl p-2.5 text-sm text-slate-800 focus:outline-none focus:border-[#00C2C3] focus:ring-1 focus:ring-[#00C2C3]">
+                            </div>
+                            <div>
+                                <label class="block text-[10px] font-extrabold text-slate-500 uppercase tracking-wider">Home Address</label>
+                                <input type="text" id="god-address" placeholder="Enter complete home address" class="w-full mt-1.5 bg-white border border-slate-200 rounded-xl p-2.5 text-sm text-slate-800 focus:outline-none focus:border-[#00C2C3] focus:ring-1 focus:ring-[#00C2C3]">
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-[10px] font-extrabold text-slate-500 uppercase tracking-wider">Type of ID</label>
+                                <select id="god-id-type" class="w-full mt-1.5 bg-white border border-slate-200 rounded-xl p-2.5 text-sm text-slate-800 focus:outline-none focus:border-[#00C2C3] focus:ring-1 focus:ring-[#00C2C3]">
+                                    <option value="National ID">National ID</option>
+                                    <option value="Drivers License">Driver's License</option>
+                                    <option value="Passport">Passport</option>
+                                    <option value="School ID">School ID / Student ID</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-[10px] font-extrabold text-slate-500 uppercase tracking-wider">ID Number</label>
+                                <input type="text" id="god-id-number" placeholder="Enter ID number" class="w-full mt-1.5 bg-white border border-slate-200 rounded-xl p-2.5 text-sm text-slate-800 focus:outline-none focus:border-[#00C2C3] focus:ring-1 focus:ring-[#00C2C3]">
+                            </div>
                         </div>
                     </div>
+
+                    <!-- Dynamic Booking Slots Container -->
+                    <div id="booking-slots-container" class="space-y-4">
+                        <!-- Dynamic Slots inserted here via Javascript -->
+                    </div>
+
+                    <!-- Add Slot Button Interface -->
+                    <button type="button" id="add-slot-btn" class="w-full py-3 border border-dashed border-slate-300 rounded-xl hover:bg-slate-50 text-slate-500 text-xs font-bold transition duration-150 flex items-center justify-center gap-1.5">
+                        <span>+</span> Add Another Booking Slot
+                    </button>
+
+                    <!-- Calculated Overview Panel -->
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider">Sport</label>
-                            <input type="text" id="g-sport" value="Basketball" class="w-full mt-1.5 bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-sm text-slate-800 focus:outline-none focus:border-[#00C2C3] focus:ring-1 focus:ring-[#00C2C3]">
+                            <label class="block text-[10px] font-extrabold text-slate-500 uppercase tracking-wider">Total Hours (All Slots)</label>
+                            <input type="text" id="summary-hours" readonly value="0" class="w-full mt-1.5 bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-sm text-slate-500 cursor-not-allowed font-semibold">
                         </div>
                         <div>
-                            <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider">Court Selection</label>
-                            <input type="text" id="g-court" value="Court 1" class="w-full mt-1.5 bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-sm text-slate-800 focus:outline-none focus:border-[#00C2C3] focus:ring-1 focus:ring-[#00C2C3]">
-                        </div>
-                    </div>
-                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider">Date</label>
-                            <input type="date" id="g-date" required class="w-full mt-1.5 bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-sm text-slate-800 focus:outline-none focus:border-[#00C2C3] focus:ring-1 focus:ring-[#00C2C3]">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider">Start Time</label>
-                            <input type="text" id="g-start" placeholder="08:00" class="w-full mt-1.5 bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-sm text-slate-800 focus:outline-none focus:border-[#00C2C3] focus:ring-1 focus:ring-[#00C2C3]">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider">End Time</label>
-                            <input type="text" id="g-end" placeholder="10:00" class="w-full mt-1.5 bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-sm text-slate-800 focus:outline-none focus:border-[#00C2C3] focus:ring-1 focus:ring-[#00C2C3]">
+                            <label class="block text-[10px] font-extrabold text-slate-500 uppercase tracking-wider">Total Base Amount (All Slots)</label>
+                            <input type="text" id="summary-base-amount" readonly value="0.00" class="w-full mt-1.5 bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-sm text-slate-500 cursor-not-allowed font-semibold">
                         </div>
                     </div>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+
+                    <!-- Additional Charges Panel (applied globally) -->
+                    <div class="border border-dashed border-slate-300 rounded-2xl p-6 space-y-4">
+                        <label class="block text-[10px] font-extrabold text-slate-500 uppercase tracking-wider">Additional Charges (Applied to Entire Transaction)</label>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <input type="number" id="additional-charges-amount" placeholder="Charge amount (PHP)" class="w-full bg-white border border-slate-200 rounded-xl p-2.5 text-sm text-slate-800 focus:outline-none focus:border-[#00C2C3] focus:ring-1 focus:ring-[#00C2C3]">
+                            </div>
+                            <div>
+                                <input type="text" id="additional-charges-remark" placeholder="Enter reason / remark" class="w-full bg-white border border-slate-200 rounded-xl p-2.5 text-sm text-slate-800 focus:outline-none focus:border-[#00C2C3] focus:ring-1 focus:ring-[#00C2C3]">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Grand Total Banner (Blue highlight card matching image) -->
+                    <div class="bg-blue-50/60 border border-blue-200/50 p-6 rounded-2xl flex flex-col gap-1 shadow-sm">
+                        <span class="text-[10px] font-extrabold text-blue-600 uppercase tracking-widest">Grand Total Payable (PHP)</span>
+                        <span id="god-grand-total" class="text-4xl font-black text-blue-900">0.00</span>
+                    </div>
+
+                    <div class="grid grid-cols-1 gap-4">
                         <div>
-                            <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider">Payment Method</label>
-                            <select id="g-pay" class="w-full mt-1.5 bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-sm text-slate-800 focus:outline-none focus:border-[#00C2C3] focus:ring-1 focus:ring-[#00C2C3]">
-                                <option value="Cash">Cash Handover</option>
-                                <option value="Online">Online Bank Transfer</option>
+                            <label class="block text-[10px] font-extrabold text-slate-500 uppercase tracking-wider">Mode of Payment</label>
+                            <select id="god-pay-mode" class="w-full mt-1.5 bg-white border border-slate-200 rounded-xl p-2.5 text-sm text-slate-800 focus:outline-none focus:border-[#00C2C3] focus:ring-1 focus:ring-[#00C2C3]">
+                                <option value="Cash">Cash</option>
+                                <option value="Online Transfer">Online Transfer</option>
                             </select>
                         </div>
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider">Reference Number</label>
-                            <input type="text" id="g-ref" placeholder="Txn ID" class="w-full mt-1.5 bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-sm text-slate-800 focus:outline-none focus:border-[#00C2C3] focus:ring-1 focus:ring-[#00C2C3]">
-                        </div>
                     </div>
-                    <button type="submit" class="w-full bg-[#00C2C3] hover:bg-[#00B0B1] text-white p-3.5 rounded-xl font-bold text-sm tracking-wide shadow-lg shadow-[#00C2C3]/20 transition duration-150 mt-2">
-                        Authorize Instant Slot Space
+
+                    <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold p-4 rounded-xl shadow-lg shadow-blue-500/10 transition duration-150 tracking-wider">
+                        Save Complete Booking
                     </button>
                 </form>
             </div>
@@ -409,16 +450,21 @@
         let bookingsData = [];
         let revenueChartInstance = null;
         let busiestChartInstance = null;
+        let slotCounter = 0;
 
         document.addEventListener("DOMContentLoaded", () => {
-            document.getElementById('god-form').addEventListener('submit', handleGodFormSubmit);
+            document.getElementById('new-booking-entry-form').addEventListener('submit', handleNewBookingEntrySubmit);
+            document.getElementById('add-slot-btn').addEventListener('click', addBookingSlotItem);
+            document.getElementById('additional-charges-amount').addEventListener('input', calculateGodSummary);
             setupMobileMenu();
             
-            // Set Default Date
+            // Set Default Calendar Date
             const todayStr = new Date().toISOString().split('T')[0];
             document.getElementById('calendar-view-date').value = todayStr;
             document.getElementById('calendar-view-date').addEventListener('change', renderDashboardCalendar);
 
+            // Initialize first data entry slot item on load
+            addBookingSlotItem();
             refreshAdminData();
         });
 
@@ -492,6 +538,282 @@
             }
         }
 
+        // Dynamic Slot Generator matching image
+        function addBookingSlotItem() {
+            slotCounter++;
+            const container = document.getElementById('booking-slots-container');
+            const slotCard = document.createElement('div');
+            
+            slotCard.id = `slot-${slotCounter}`;
+            slotCard.className = "booking-slot-item bg-slate-50 p-6 rounded-2xl border border-slate-200/60 relative space-y-4 shadow-sm";
+            
+            const todayStr = new Date().toISOString().split('T')[0];
+
+            slotCard.innerHTML = `
+                <div class="flex justify-between items-center border-b border-slate-100 pb-2">
+                    <span class="text-[10px] font-extrabold text-[#00C2C3] uppercase tracking-widest">Booking Segment</span>
+                    <button type="button" onclick="removeBookingSlotItem('${slotCard.id}')" class="text-xs font-bold bg-red-50 text-red-500 px-3 py-1 rounded-lg hover:bg-red-100 transition">Remove Slot</button>
+                </div>
+                
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div>
+                        <label class="block text-[10px] font-extrabold text-slate-500 uppercase tracking-wider">Date of Event</label>
+                        <input type="date" required value="${todayStr}" class="slot-date w-full mt-1.5 bg-white border border-slate-200 rounded-xl p-2.5 text-sm text-slate-800 focus:outline-none focus:border-[#00C2C3] focus:ring-1 focus:ring-[#00C2C3]">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-extrabold text-slate-500 uppercase tracking-wider">Sport Type / Package</label>
+                        <select onchange="handleSlotSportChange('${slotCard.id}')" class="slot-sport w-full mt-1.5 bg-white border border-slate-200 rounded-xl p-2.5 text-sm text-slate-800 focus:outline-none focus:border-[#00C2C3] focus:ring-1 focus:ring-[#00C2C3]">
+                            <option value="Basketball">Basketball</option>
+                            <option value="Volleyball">Volleyball</option>
+                            <option value="Badminton">Badminton</option>
+                            <option value="Pickleball">Pickleball</option>
+                            <option value="Package A">Package A (Whole Gym)</option>
+                            <option value="Package B">Package B (Court 1)</option>
+                            <option value="Package C">Package C (Court 3)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-extrabold text-slate-500 uppercase tracking-wider">Select Facility</label>
+                        <select class="slot-court w-full mt-1.5 bg-white border border-slate-200 rounded-xl p-2.5 text-sm text-slate-800 focus:outline-none focus:border-[#00C2C3] focus:ring-1 focus:ring-[#00C2C3]">
+                            <option value="Court 1">Court 1</option>
+                            <option value="Court 2">Court 2</option>
+                            <option value="Court 3">Court 3</option>
+                            <option value="Whole Gym">Whole Gym</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-[10px] font-extrabold text-slate-500 uppercase tracking-wider">Remarks & Inclusions</label>
+                    <input type="text" class="slot-remarks w-full mt-1.5 bg-white border border-slate-200 rounded-xl p-2.5 text-sm text-slate-800 focus:outline-none focus:border-[#00C2C3] focus:ring-1 focus:ring-[#00C2C3]" placeholder="Regular Game (Max 20).">
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-[10px] font-extrabold text-slate-500 uppercase tracking-wider">Time Started</label>
+                        <select onchange="calculateGodSummary()" class="slot-start w-full mt-1.5 bg-white border border-slate-200 rounded-xl p-2.5 text-sm text-slate-800 focus:outline-none focus:border-[#00C2C3] focus:ring-1 focus:ring-[#00C2C3]"></select>
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-extrabold text-slate-500 uppercase tracking-wider">Time Ended</label>
+                        <select onchange="calculateGodSummary()" class="slot-end w-full mt-1.5 bg-white border border-slate-200 rounded-xl p-2.5 text-sm text-slate-800 focus:outline-none focus:border-[#00C2C3] focus:ring-1 focus:ring-[#00C2C3]"></select>
+                    </div>
+                </div>
+            `;
+            
+            container.appendChild(slotCard);
+            populateSlotTimeSelects(slotCard.id);
+            handleSlotSportChange(slotCard.id);
+            calculateGodSummary();
+        }
+
+        function removeBookingSlotItem(slotId) {
+            const slots = document.querySelectorAll('.booking-slot-item');
+            if (slots.length <= 1) {
+                alert("Minimum of one booking slot is required.");
+                return;
+            }
+            const el = document.getElementById(slotId);
+            if (el) el.remove();
+            calculateGodSummary();
+        }
+
+        function populateSlotTimeSelects(slotId) {
+            const slot = document.getElementById(slotId);
+            const startSelect = slot.querySelector('.slot-start');
+            const endSelect = slot.querySelector('.slot-end');
+
+            startSelect.innerHTML = `<option value="">Select start time...</option>`;
+            endSelect.innerHTML = `<option value="">Select end time...</option>`;
+
+            for (let hour = 6; hour <= 22; hour++) {
+                let hourStr = hour < 10 ? '0' + hour : hour;
+                
+                startSelect.innerHTML += `<option value="${hourStr}:00">${formatTimeLabel(hour)}</option>`;
+                endSelect.innerHTML += `<option value="${hourStr}:00">${formatTimeLabel(hour)}</option>`;
+                
+                if (hour !== 22) {
+                    startSelect.innerHTML += `<option value="${hourStr}:30">${hourStr.toString()}:30 ${hour >= 12 ? 'PM':'AM'}</option>`;
+                    endSelect.innerHTML += `<option value="${hourStr}:30">${hourStr.toString()}:30 ${hour >= 12 ? 'PM':'AM'}</option>`;
+                }
+            }
+        }
+
+        // Auto selection and inclusion locks based on selected Sport / Package
+        function handleSlotSportChange(slotId) {
+            const slot = document.getElementById(slotId);
+            const sportVal = slot.querySelector('.slot-sport').value;
+            const courtSelect = slot.querySelector('.slot-court');
+            const remarksInput = slot.querySelector('.slot-remarks');
+
+            courtSelect.disabled = false;
+            for (let option of courtSelect.options) {
+                option.hidden = false;
+                option.disabled = false;
+            }
+
+            if (sportVal === 'Volleyball') {
+                courtSelect.value = 'Court 1';
+                courtSelect.options[1].disabled = true;
+                courtSelect.options[3].disabled = true;
+                remarksInput.value = "Regular Game (Max 20 pax).";
+            } else if (sportVal === 'Badminton') {
+                courtSelect.value = 'Court 2';
+                courtSelect.options[0].disabled = true;
+                courtSelect.options[2].disabled = true;
+                courtSelect.options[3].disabled = true;
+                remarksInput.value = "Regular Game (Max 20 pax).";
+            } else if (sportVal === 'Package A') {
+                courtSelect.value = 'Whole Gym';
+                courtSelect.disabled = true;
+                remarksInput.value = "Exclusive Full Facility Rental (3 Courts + Bleachers).";
+            } else if (sportVal === 'Package B') {
+                courtSelect.value = 'Court 1';
+                courtSelect.disabled = true;
+                remarksInput.value = "Court 1 + Bleachers Access (Max 80 pax).";
+            } else if (sportVal === 'Package C') {
+                courtSelect.value = 'Court 3';
+                courtSelect.disabled = true;
+                remarksInput.value = "Standard Court + Extra Pax (Max 50 pax).";
+            } else {
+                courtSelect.options[3].disabled = true;
+                remarksInput.value = "Regular Game (Max 20 pax).";
+            }
+            calculateGodSummary();
+        }
+
+        // Live computations of all booking summary values
+        function calculateGodSummary() {
+            const slots = document.querySelectorAll('.booking-slot-item');
+            let totalHours = 0;
+            let baseAmount = 0;
+
+            slots.forEach(slot => {
+                const sport = slot.querySelector('.slot-sport').value;
+                const court = slot.querySelector('.slot-court').value;
+                const startVal = slot.querySelector('.slot-start').value;
+                const endVal = slot.querySelector('.slot-end').value;
+
+                if (startVal && endVal) {
+                    const start = parseTime(startVal);
+                    const end = parseTime(endVal);
+
+                    if (start < end) {
+                        const delta = end - start;
+                        totalHours += delta;
+
+                        // Local price computation mapping Code.gs rate structures
+                        let price = 0;
+                        let flatRate = null;
+                        if (sport === "Package A") flatRate = 80;
+                        else if (sport === "Package B") flatRate = 20;
+                        else if (sport === "Package C") flatRate = 18;
+
+                        if (flatRate !== null) {
+                            price = delta * flatRate;
+                        } else {
+                            for (let h = start; h < end; h += 0.5) {
+                                if (h >= 6 && h < 17) price += 0.5 * 15;
+                                else price += 0.5 * 25;
+                            }
+                        }
+                        baseAmount += price;
+                    }
+                }
+            });
+
+            const extraCharges = Number(document.getElementById('additional-charges-amount').value) || 0;
+            const grandTotal = baseAmount + extraCharges;
+
+            document.getElementById('summary-hours').value = totalHours;
+            document.getElementById('summary-base-amount').value = baseAmount.toFixed(2);
+            document.getElementById('god-grand-total').innerText = grandTotal.toFixed(2);
+        }
+
+        // Multi-Slot Sequential DB submissions to ensure conflict validation loops properly
+        async function handleNewBookingEntrySubmit(e) {
+            e.preventDefault();
+
+            const name = document.getElementById('god-client-name').value;
+            const org = document.getElementById('god-org').value;
+            const email = document.getElementById('god-email').value;
+            const address = document.getElementById('god-address').value;
+            const idType = document.getElementById('god-id-type').value;
+            const idNumber = document.getElementById('god-id-number').value;
+            const payMode = document.getElementById('god-pay-mode').value;
+            const extraCharge = Number(document.getElementById('additional-charges-amount').value) || 0;
+            const extraRemark = document.getElementById('additional-charges-remark').value || '';
+
+            const slots = document.querySelectorAll('.booking-slot-item');
+            let requests = [];
+
+            for (let slot of slots) {
+                const date = slot.querySelector('.slot-date').value;
+                const sport = slot.querySelector('.slot-sport').value;
+                const court = slot.querySelector('.slot-court').value;
+                const start = slot.querySelector('.slot-start').value;
+                const end = slot.querySelector('.slot-end').value;
+
+                if (!start || !end) {
+                    alert("Please select valid Start and End times for all active slots.");
+                    return;
+                }
+                if (parseTime(start) >= parseTime(end)) {
+                    alert("Time started must configure to begin before time ended.");
+                    return;
+                }
+
+                requests.push({
+                    name: name,
+                    email: email,
+                    sport: sport,
+                    court: court,
+                    date: date,
+                    start: start,
+                    end: end,
+                    paymentMode: payMode,
+                    refNum: `Org: ${org || 'N/A'} | ID: ${idType} (${idNumber}) | Address: ${address}`,
+                    godMode: 'true'
+                });
+            }
+
+            // Save slots sequentially to avoid concurrency overlap on Sheets
+            let count = 0;
+            for (let req of requests) {
+                try {
+                    const res = await callAPI('submitBooking', req);
+                    if (res.success) {
+                        count++;
+                    } else {
+                        alert(`Save Failed on Slot (${req.date} | ${req.start}-${req.end} on ${req.court}): ${res.msg}`);
+                        return; // Halt process on overlap
+                    }
+                } catch (err) {
+                    console.error(err);
+                    alert("System error communicating with server database.");
+                    return;
+                }
+            }
+
+            // Write global extra charge records into latest row if amount was mapped
+            if (extraCharge > 0 && bookingsData.length > 0) {
+                const lastId = bookingsData[bookingsData.length - 1].id;
+                await callAPI('processBookingAction', {
+                    bookingId: lastId,
+                    action: 'APPROVE',
+                    reason: `Override Charges: ${extraRemark}`,
+                    extraCharges: extraCharge
+                });
+            }
+
+            alert(`Successfully registered ${count} reservation segments under ${name}`);
+            document.getElementById('new-booking-entry-form').reset();
+            
+            // Re-initialize clear dynamic rows
+            document.getElementById('booking-slots-container').innerHTML = '';
+            addBookingSlotItem();
+            refreshAdminData();
+        }
+
         async function refreshAdminData() {
             try {
                 const bookings = await callAPI('getActiveBookings');
@@ -506,7 +828,6 @@
             }
         }
 
-        // Live Dynamic calendar renderer (Fills rows from 6:00 AM to 10:00 PM)
         function renderDashboardCalendar() {
             const dateVal = document.getElementById('calendar-view-date').value;
             const gridBody = document.getElementById('dashboard-calendar-grid');
@@ -546,9 +867,8 @@
                     if (b.court === court || b.court === 'Whole Gym') {
                         let start = parseTime(b.start);
                         let end = parseTime(b.end);
-                        // Overlap condition checks if any block intersects
                         if (start < eh && end > sh) {
-                            return b.status; // Returns PENDING or CONFIRMED
+                            return b.status;
                         }
                     }
                 }
@@ -556,12 +876,6 @@
             return 'AVAILABLE';
         }
 
-        function parseTime(t) {
-            const [h, m] = t.split(':').map(Number);
-            return h + (m/60);
-        }
-
-        // Styled calendar badges matching BidiBet reference layout
         function renderCalendarCellBadge(status) {
             if (status === 'CONFIRMED') {
                 return `<span class="bg-red-50 text-red-500 border border-red-100 rounded-xl text-center text-xs font-extrabold tracking-wider py-2 uppercase block w-full select-none shadow-sm shadow-red-500/5">TAKEN</span>`;
@@ -744,7 +1058,6 @@
             printArea.classList.add('hidden');
         }
 
-        // Fills database viewer with clean database listing of all system files
         function populateDatabaseTable() {
             const body = document.getElementById('database-table-body');
             if (!body) return;
@@ -783,35 +1096,7 @@
             });
         }
 
-        async function handleGodFormSubmit(e) {
-            e.preventDefault();
-            const formData = {
-                name: document.getElementById('g-name').value,
-                email: document.getElementById('g-email').value,
-                sport: document.getElementById('g-sport').value,
-                court: document.getElementById('g-court').value,
-                date: document.getElementById('g-date').value,
-                start: document.getElementById('g-start').value,
-                end: document.getElementById('g-end').value,
-                paymentMode: document.getElementById('g-pay').value,
-                refNum: document.getElementById('g-ref').value,
-                godMode: 'true'
-            };
-
-            try {
-                const res = await callAPI('submitBooking', formData);
-                if (res.success) {
-                    alert(`God Mode Space Reservation Authorized. Session Entry: #${res.bookingId}`);
-                    document.getElementById('god-form').reset();
-                    refreshAdminData();
-                } else {
-                    alert(res.msg);
-                }
-            } catch (err) {
-                console.error(err);
-            }
-        }
-
+        // Palette matching Chart.js Styling Configuration
         function buildCharts() {
             const confirmed = bookingsData.filter(b => b.status === 'CONFIRMED');
             const daysMap = {};
